@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #text {
+      height: 900px;
+      width: 900px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="text"></div>
+  <script>
+    function arrayToTree(arr) {
+      const map = {}; // 创建一个映射对象，用于存储每个节点的引用
+
+      // 第一次遍历：为数组中的每个元素创建一个节点
+      arr.forEach(item => {
+        map[item.id] = { ...item, children: [] }; // 使用具有空 children 数组的副本创建节点
+      });
+
+      // 第二次遍历：将每个节点链接到其父节点（如果适用）
+      arr.forEach(item => {
+        if (item.parentId !== 0) {
+          const parent = map[item.parentId];
+          if (parent) {
+            parent.children.push(map[item.id]);
+          }
+        }
+      });
+
+      // 第三次遍历：找到根节点（具有 parentId === 0 的项）
+      const tree = [];
+      arr.forEach(item => {
+        if (item.parentId === 0) {
+          tree.push(map[item.id]);
+        }
+      });
+
+      return tree;
+    }
+
+    const arr = [
+      {
+        id: 1,
+        name: '部门A',
+        parentId: 2,
+      },
+      {
+        id: 2,
+        name: '部门B',
+        parentId: 0,
+      },
+      {
+        id: 3,
+        name: '部门C',
+        parentId: 1,
+      },
+      {
+        id: 4,
+        name: '部门D',
+        parentId: 1,
+      },
+      {
+        id: 5,
+        name: '部门E',
+        parentId: 2,
+      },
+      {
+        id: 6,
+        name: '部门F',
+        parentId: 3,
+      },
+      {
+        id: 7,
+        name: '部门G',
+        parentId: 2,
+      },
+      {
+        id: 8,
+        name: '部门H',
+        parentId: 4,
+      },
+    ];
+
+    const tree = arrayToTree(arr);
+    const test = document.getElementById('text')
+    test.innerText = JSON.stringify(tree, null, 2)
+
+  </script>
+</body>
+
+</html>

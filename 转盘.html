@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>转盘抽奖</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    .time {
+      position: relative;
+      height: 60px;
+      width: 10px;
+      background-color: black;
+      margin-bottom: 20px;
+    }
+    .time::before {
+      position: absolute;
+      top: 100px;
+      left: -10px;
+      height: 10px;
+      width: 10px;
+      background-color: yellow;
+    }
+
+    .turntable {
+      width: 300px;
+      height: 300px;
+      border: 1px solid;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .wheel {
+      width: 300px;
+      height: 300px;
+      position: relative;
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .sector {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(50% 50%, 0% 0%, 50% 0%);
+      transform-origin: 50% 50%;
+    }
+
+    .sector1 {
+      background-color: red;
+      transform: rotate(45deg);
+    }
+    .text1 {
+      position: absolute;
+      left: 80px;
+      top: 40px;
+      transform: rotate(-45deg);
+    }
+
+    .sector2 {
+      background-color: yellow;
+      transform: rotate(90deg);
+    }
+    .text2 {
+      position: absolute;
+      left: 80px;
+      top: 50px;
+      transform: rotate(-90deg);
+    }
+    
+    .sector3 {
+      background-color: red;
+      transform: rotate(135deg);
+    }
+    .text3 {
+      position: absolute;
+      left: 80px;
+      top: 50px;
+      transform: rotate(-135deg);
+    }
+
+    .sector4 {
+      background-color: yellow;
+      transform: rotate(180deg);
+    }
+    .text4 {
+      position: absolute;
+      left: 80px;
+      top: 50px;
+      transform: rotate(-180deg);
+    }
+
+    .sector5 {
+      background-color: red;
+      transform: rotate(225deg);
+    }
+
+    .text5 {
+      position: absolute;
+      left: 80px;
+      top: 50px;
+      transform: rotate(-225deg);
+    }
+
+    .sector6 {
+      background-color: yellow;
+      transform: rotate(270deg);
+    }
+
+    .text6 {
+      position: absolute;
+      left: 80px;
+      top: 50px;
+      transform: rotate(-270deg);
+    }
+
+    .sector7 {
+      background-color: red;
+      transform: rotate(315deg);
+    }
+    .text7 {
+      position: absolute;
+      left: 80px;
+      top: 50px;
+      transform: rotate(-315deg);
+    }
+
+    .sector8 {
+      background-color: yellow;
+      transform: rotate(0);
+    }
+    .text8 {
+      position: absolute;
+      left: 80px;
+      top: 50px;
+    }
+
+    .sector-text {
+      font-size: 14px;
+      color: #ffffff;
+    }
+
+    .control-panel {
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 0 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="time"></div>
+  <div class="turntable" id="turntable">
+    <div class="wheel" id="wheel">
+      <div class="sector sector1"><span class="text1">奖品1</span></div>
+      <div class="sector sector2"><span class="text2">奖品2</span></div>
+      <div class="sector sector3"><span class="text3">奖品3</span></div>
+      <div class="sector sector4"><span class="text4">奖品4</span></div>
+      <div class="sector sector5"><span class="text5">奖品5</span></div>
+      <div class="sector sector6"><span class="text6">奖品6</span></div>
+      <div class="sector sector7"><span class="text7">奖品7</span></div>
+      <div class="sector sector8"><span class="text8">奖品8</span></div>
+    </div>
+  </div>
+  <div class="control-panel">
+    <label for="speed">转速:</label>
+    <input type="range" id="speed" min="1" max="10" step="1" value="5">
+    <button onclick="start()">开始</button>
+    <button onclick="stop()">停止</button>
+  </div>
+  <script>
+    const turntable = document.getElementById('turntable');
+    const wheel = document.getElementById('wheel');
+    const sectors = document.querySelectorAll('.sector');
+    const speedRange = document.getElementById('speed');
+
+    let isTurning = false;
+    let rotationSpeed = 5;
+    let currentSector = 0;
+
+    function rotateWheel() {
+      currentSector += rotationSpeed;
+      console.log(currentSector)
+      if (currentSector === 360) {
+        stop()
+      }
+
+      if (currentSector >= 360) {
+        currentSector %= 360;
+      }
+
+
+      wheel.style.transform = `rotate(-${currentSector}deg)`;
+
+      if (isTurning) {
+        requestAnimationFrame(rotateWheel);
+      }
+    }
+
+    function start() {
+      if (!isTurning) {
+        isTurning = true;
+        rotateWheel();
+      }
+    }
+
+    function stop() {
+      isTurning = false;
+      // 计算停止时指针所在的扇形区域
+      if (currentSector === 0) {
+        return
+      }
+      const stopSector = Math.ceil((currentSector) / 45) - 1;
+      console.log(stopSector)
+      console.log(`抽中了奖品：${sectors[stopSector].textContent}`);
+    }
+
+    speedRange.addEventListener('input', () => {
+      rotationSpeed = parseInt(speedRange.value);
+      console.log(rotationSpeed)
+    });
+
+  </script>
+</body>
+
+</html>
