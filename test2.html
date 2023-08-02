@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Sphere with Multiple Colors</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+    #canvas {
+      width: 100%;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <div id="canvas"></div>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    canvas.appendChild(renderer.domElement);
+
+    const geometry = new THREE.SphereGeometry(5, 32, 32);
+    const positionAttribute = geometry.attributes.position;
+    const colorAttribute = new THREE.BufferAttribute(new Float32Array(positionAttribute.count * 3), 3);
+
+    // 为每个顶点设置不同颜色
+    for (let i = 0; i < positionAttribute.count; i++) {
+      const color = new THREE.Color(Math.random(), Math.random(), Math.random());
+      colorAttribute.setXYZ(i, color.r, color.g, color.b);
+    }
+
+    geometry.setAttribute('color', colorAttribute);
+
+    // 使用 MeshBasicMaterial 或者 MeshLambertMaterial 来支持顶点颜色
+    const material = new THREE.MeshLambertMaterial({ vertexColors: THREE.VertexColors });
+
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(1, 1, 1).normalize();
+    scene.add(light);
+
+    camera.position.z = 15;
+
+    const animate = function () {
+      requestAnimationFrame(animate);
+      sphere.rotation.x += 0.005;
+      sphere.rotation.y += 0.005;
+      renderer.render(scene, camera);
+    };
+
+    animate();
+  </script>
+</body>
+</html>
