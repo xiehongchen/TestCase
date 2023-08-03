@@ -1,0 +1,33 @@
+<!-- child.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Child Page</title>
+</head>
+<body>
+  <h1>Child Page</h1>
+  <button id="sendMessageButton">Send Message to Parent Page</button>
+
+  <script>
+    // 监听父页面发来的消息
+    window.addEventListener('message', event => {
+
+      const messageFromParent = event.data;
+      console.log('child页面收到消息:', messageFromParent);
+    });
+
+    // 发送消息给父页面
+    function sendMessageToParent() {
+      const message = '来自child页面';
+      // 使用 window.parent.postMessage 发送消息给父页面
+      window.parent.postMessage(message, '*');
+    }
+
+    // 绑定按钮点击事件
+    const sendMessageButton = document.getElementById('sendMessageButton');
+    sendMessageButton.addEventListener('click', sendMessageToParent);
+  </script>
+</body>
+</html>
