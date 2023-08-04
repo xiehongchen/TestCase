@@ -63,5 +63,5 @@ function transNumberToChinese(num) {
 }
 
 // 测试函数
-const num = 123406789099;
+const num = 123400789099;
 console.log(transNumberToChinese(num)); // 输出：一亿二千三百四十五万六千七百八十九

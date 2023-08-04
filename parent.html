@@ -1,31 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parent Page</title>
+  <title>Sender Page</title>
 </head>
 <body>
-  <h1>Parent Page</h1>
-  <button id="sendMessageButton">Send Message to Child Page</button>
+  <h1>Sender Page</h1>
+  <button id="sendMessageButton">Send Message to Receiver Page</button>
 
   <script>
-    // 监听子页面发来的消息
-    window.addEventListener('message', event => {
-      const data = event.data;
-      console.log('parent页面收到消息:', data);
-    });
-
-    // 发送消息给子页面
-    function sendMessageToChild() {
-      const message = '来自parent';
-      // 使用 window.frames[index].postMessage 发送消息给子页面
-      window.postMessage(message, '*');
-    }
-
-    // 绑定按钮点击事件
     const sendMessageButton = document.getElementById('sendMessageButton');
-    sendMessageButton.addEventListener('click', sendMessageToChild);
+
+    sendMessageButton.addEventListener('click', () => {
+      const message = 'Hello from Sender Page!';
+      // 获取接收消息的窗口对象（Receiver Page 的窗口对象）
+      // 发送消息给接收页面
+      const childHtml = window.open('child.html', '_blank')
+      console.log(childHtml)
+      childHtml.postMessage(message, '*');
+      console.log(window)
+    });
   </script>
 </body>
 </html>
