@@ -5,6 +5,7 @@
 </head>
 <body>
   <h1>主线程和Web Worker测试</h1>
+  <button onclick="startTogether()">同时开启</button>
   <button onclick="runInMainThread()">在主线程中执行</button>
   <button onclick="runInWebWorker()">在Web Worker中执行</button>
   <p id="result"></p>
@@ -14,23 +15,41 @@
     let resultElem = document.getElementById('result');
     let resultElem1 = document.getElementById('result1');
 
+    function startTogether () {
+      runInWebWorker()
+      runInMainThread()
+    }
+    function formatTime(timestamp) {
+      const date = new Date(timestamp);
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
     // 在主线程中执行
     function runInMainThread() {
       const startTime = performance.now();
       const result = fibonacci(40);
       const endTime = performance.now();
-      displayResult(`在主线程中执行，结果：${result}，耗时：${endTime - startTime}ms`);
+      displayResult(`在主线程中执行，结果：${result}，
+      开始时间：${formatTime(startTime)} === ${startTime}，
+      结束时间：${formatTime(endTime)} === ${endTime}，
+      耗时：${(endTime  - startTime)}`);
     }
 
     // 在Web Worker中执行
     function runInWebWorker() {
-      const worker = new Worker('worker.js');
-      const startTime = performance.now();
+      const worker = new Worker('./worker.js');
+      const startTime1 = performance.now();
 
       // 接收来自Web Worker的消息
       worker.onmessage = (event) => {
-        const endTime = performance.now();
-        displayResult1(`在Web Worker中执行，结果：${event.data.result}，耗时：${endTime - startTime}ms`);
+        const endTime1 = performance.now();
+        displayResult1(`在Web Worker中执行，结果：${event.data.result}，
+        开始时间：${formatTime(startTime1)} === ${startTime1}，
+        结束时间：${formatTime(endTime1)} === ${endTime1}，
+        耗时：${(endTime1  - startTime1)}`);
       };
 
       // 向Web Worker发送消息，触发执行
