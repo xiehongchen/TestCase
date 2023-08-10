@@ -2,11 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Three.js Tree</title>
+  <style>
+    body { margin: 0; }
+    canvas { display: block; }
+  </style>
 </head>
 <body>
-  <script src="./test5.js"></script>
+  <script type="module">
+    import * as THREE from 'three';
+
+    // 创建场景
+    const scene = new THREE.Scene();
+
+    // 创建相机
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // 创建渲染器
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // 创建树干
+    const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1, 32);
+    const trunkMaterial = new THREE.MeshBasicMaterial({ color: 0x8B4513 });
+    const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+    scene.add(trunk);
+
+    // 创建树叶
+    const leafGeometry = new THREE.SphereGeometry(0.5, 16, 16);
+    const leafMaterial = new THREE.MeshBasicMaterial({ color: 0x228B22 });
+    const leaf = new THREE.Mesh(leafGeometry, leafMaterial);
+    leaf.position.y = 1.5;
+    scene.add(leaf);
+
+    // 创建光源
+    const light = new THREE.DirectionalLight(0xffffff);
+    light.position.set(1, 1, 1);
+    scene.add(light);
+
+    // 更新渲染
+    const animate = () => {
+      requestAnimationFrame(animate);
+      trunk.rotation.y += 0.01;
+      leaf.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    };
+
+    animate();
+  </script>
 </body>
 </html>
