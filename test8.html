@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three.js Rotating Coordinate Axes</title>
+</head>
+<body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // 创建场景
+    const scene = new THREE.Scene();
+
+    // 创建相机
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    // 创建渲染器
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // 创建坐标轴
+    const axesHelper = new THREE.AxesHelper(10);
+    scene.add(axesHelper);
+    console.log('axesHelper', axesHelper)
+
+    // 添加旋转动画
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // 使坐标轴绕一个固定点旋转
+      axesHelper.rotation.x += 0.01;
+      axesHelper.rotation.y += 0.01;
+      axesHelper.rotation.z += 0.01;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag to Rotate Cube</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas') });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const arrowLength = 5;
+    const arrowColorX = 0xff0000;
+    const arrowColorY = 0x00ff00;
+    const arrowColorZ = 0x0000ff;
+
+    // 创建箭头坐标轴
+    const arrowX = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), arrowLength, arrowColorX);
+    const arrowY = new THREE.ArrowHelper(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 0), arrowLength, arrowColorY);
+    const arrowZ = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, 0), arrowLength, arrowColorZ);
+
+    const axis = new THREE.AxesHelper(5);
+    scene.add(axis);
+
+    // 正方体
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+    const cube = new THREE.Mesh(geometry, material);
+    scene.add(cube);
+    scene.add(arrowX);
+    scene.add(arrowY);
+    scene.add(arrowZ);
+        // 添加 X、Y、Z 标签
+        const fontLoader = new THREE.FontLoader();
+    fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+      const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+
+      const textGeometryX = new THREE.TextGeometry('X', {
+        font: font,
+        size: 0.5,
+        height: 0.1
+      });
+      const textX = new THREE.Mesh(textGeometryX, textMaterial);
+      textX.position.set(arrowLength + 0.5, 0, 0);
+      scene.add(textX);
+
+      const textGeometryY = new THREE.TextGeometry('Y', {
+        font: font,
+        size: 0.5,
+        height: 0.1
+      });
+      const textY = new THREE.Mesh(textGeometryY, textMaterial);
+      textY.position.set(0, arrowLength + 0.5, 0);
+      scene.add(textY);
+
+      const textGeometryZ = new THREE.TextGeometry('Z', {
+        font: font,
+        size: 0.5,
+        height: 0.1
+      });
+      const textZ = new THREE.Mesh(textGeometryZ, textMaterial);
+      textZ.position.set(0, 0, arrowLength + 0.5);
+      scene.add(textZ);
+    });
+
+    camera.position.z = 10;
+    camera.position.x = 5;
+    camera.position.y = 5;
+
+
+    // 相机看向原点
+    camera.lookAt(0, 0, 0);
+
+    let isDragging = false;
+    let startMousePosition = { x: 0, y: 0 };
+    let endMousePosition = { x: 0, y: 0 };
+
+    document.getElementById('canvas').addEventListener('mousedown', onMouseDown);
+    document.getElementById('canvas').addEventListener('mousemove', onMouseMove);
+    document.getElementById('canvas').addEventListener('mouseup', onMouseUp);
+
+    animate();
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isDragging && (endMousePosition.x !== startMousePosition.x || endMousePosition.y !== startMousePosition.y)) {
+        const deltaX = endMousePosition.x - startMousePosition.x;
+        const deltaY = endMousePosition.y - startMousePosition.y;
+
+        cube.rotation.x += deltaY * 0.0005; // 更小的旋转角度
+        cube.rotation.y += deltaX * 0.0005;
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function onMouseDown(event) {
+      isDragging = true;
+      startMousePosition = { x: event.clientX, y: event.clientY };
+    }
+
+    function onMouseMove(event) {
+      if (!isDragging) return;
+
+      endMousePosition = { x: event.clientX, y: event.clientY };
+    }
+
+    function onMouseUp() {
+      isDragging = false;
+      startMousePosition = { x: 0, y: 0 };
+      endMousePosition = { x: 0, y: 0 };
+    }
+  </script>
+</body>
+</html>
