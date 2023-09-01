@@ -7,7 +7,7 @@
 <body>
     <h1>GitHub File Upload</h1>
     <form id="upload-form">
-        <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.gif">
+        <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.gif,.pdf">
         <input type="hidden" id="sha-input" name="sha" value="">
         <button type="submit">Upload</button>
     </form>
@@ -24,8 +24,9 @@
                 showMessage('Please select a file.');
                 return;
             }
-
-            const accessToken = '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';
+// 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
+// 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
+            const accessToken = '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';
             const username = 'xiehongchen111';
             const repo = 'sky-image';
             const branch = 'main';
