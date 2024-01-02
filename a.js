@@ -1,25 +1,11 @@
 /**
- * 快速排序
- * 时间复杂度为O(nlogn)
- * @param {*} arr 
- * @returns 
+ * @param {number[]} nums1
+ * @param {number} m
+ * @param {number[]} nums2
+ * @param {number} n
+ * @return {void} 不要返回任何内容，而是就地修改nums1。
  */
-function quickSort (arr) {
-  if (arr.length <= 1) return arr
-  // 中间节点
-  let mid = Math.floor(arr.length / 2)
-  // 以中间节点为基准点，比改节点大的值放到right数组中，否则放到left数组中
-  let base = arr.splice(mid, 1)[0]
-  let left = []
-  let right = []
-  arr.forEach(item => {
-    if (item > base) {
-      right.push(item)
-    } else {
-      left.push(item)
-    }
-  })
-  return quickSort(left).concat(base, quickSort(right))
-}
-
-console.log(quickSort([22,33,23,123,64,11,745,34]))
+var merge = function (nums1, m, nums2, n) {
+  const list = nums1.filter(i => i !== 0)
+  const nums1 = [...list, ...nums2]
+};
