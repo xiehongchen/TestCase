@@ -76,3 +76,4 @@ function concurRequest(urls, maxNum) {
     "https://api.example.com/profile/update",
     "https://api.example.com/user/reset-password",
   ];
+  concurRequest(apiEndpoints, 4)

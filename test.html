@@ -1,76 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    .page {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      background: #1884FD;
-    }
-
-    .box {
-      overflow: hidden;
-      position: relative;
-      width: 100px;
-      height: 100px;
-      background:#1884FD;
-      border-radius: 50%;
-    }
-
-    .form {
-      position: absolute;
-      inset: 4px;
-      background: #1884FD;
-      padding: 50px 40px;
-      border-radius: 50%;
-      z-index: 2;
-    }
-
-    @keyframes animate {
-      0% {
-        transform: rotate(0deg);
-      }
-
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    .box::after{
-      content: '';
-      position: absolute;
-      /* top: -50%;
-      left: -50%; */
-      width: 120px;
-      height: 120px;
-      background: linear-gradient(0deg,
-          transparent,
-          transparent,
-          #45f3ff,
-          #45f3ff,
-          #45f3ff);
-      z-index: 1;
-      transform-origin: center;
-      animation: animate 6s linear infinite;
-    }
-
-  </style>
+  <title>控制并发请求</title>
 </head>
-
 <body>
-  <div class="page">
-    <div class="box">
-      <div class="line"></div>
-      <div class="form"></div>
-    </div>
-  </div>
-</body>
 
+</body>
+<script>
+// const urls = [];
+// for (let i = 0; i < 100; i++) {
+//     urls.push("http://www.baidu.com/" + i);
+// }
+// function handleRequest(max, urls) {
+//     return new Promise((resolve) => {
+//         if (urls.length === 0) {
+//             resolve([]);
+//             return;
+//         }
+//         const result = [];
+//         let index = 0;
+
+//         async function request() {
+//             if (index >= urls.length) {
+//                 return;
+//             }
+//             const i = index;
+//             const url = urls[index];
+//             index++;
+//             try {
+//                 const resp = await fetch(url);
+//                 result[i] = resp;
+//             } catch (error) {
+//                 result[i] = error;
+//             } finally {
+//                 // 这个是 相当于 当前的这个通道完成后在继续 调用下一个接口
+//                 request();
+//             }
+//         }
+//         // 这个是 请求的并发数
+//         const times = Math.min(max, urls.length);
+//         for (let i = 0; i < times; i++) {
+//             request();
+//         }
+
+//         resolve(result);
+//     });
+// }
+
+// const aaa = handleRequest(5, urls);
+// console.log(aaa, "aaa");
+
+async function handleRequest(max, urls) {
+    const results = [];
+
+    async function request(url, i) {
+        try {
+            const resp = await fetch(url);
+            results[i] = resp;
+        } catch (error) {
+            results[i] = error;
+        }
+    }
+
+    const requests = urls.map((url, i) => request(url, i));
+    await Promise.all(requests);
+
+    return results;
+}
+
+const urls = [];
+for (let i = 0; i < 100; i++) {
+    urls.push("http://www.bai.com/" + i);
+}
+
+const aaa = handleRequest(5, urls);
+aaa.then(result => {
+    console.log(result, "result");
+});
+
+</script>
 </html>
