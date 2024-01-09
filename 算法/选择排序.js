@@ -1,6 +1,8 @@
 /**
  * 选择排序
- * 时间复杂度为O(n^2)
+ * 依次找到剩余元素的最小值或者最大值，放置在末尾或者开头。
+ * 平均时间复杂度为O(n^2)，空间复杂度为O(1)
+ * 最快O(n^2)，最慢O(n^2)，不稳定，占用常用内存
  * @param {*} arr 
  * @returns 
  */
@@ -16,6 +18,7 @@ function selectSort (arr) {
     if (index !== i) {
       [arr[i], arr[index]] = [arr[index], arr[i]]
     }
+    console.log(`第${i+1}次循环`, arr);
   }
   return arr
 }

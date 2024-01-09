@@ -1,105 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Infinite Scrolling Animation</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css?family=Poppins:400,600,700,800&display=swap');
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
-}
-
-body {
-  min-height: 100vh;
-  background-color: #fff;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center; 
-}
-
-.scroll {
-  position: relative;
-  display: flex;
-  width: 700px;
-  overflow: hidden;
-  border: 20px solid green;
-}
-
-.img-box {
-  display: flex;
-}
-.img-box > div,
-.img-box > div .bg {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-.img-box .bg {
-  width: 150px;
-  height: 150px;
-  background-color: #ff3e3e;
-}
-
-.scroll > div {
-  white-space: nowrap;
-  animation: animate 24s linear infinite;
-  animation-delay: -24s;
-}
-@keyframes animate {
-  0% {
-    transform: translateX(100%);
-  }
-
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
-.scroll > div:nth-child(2) {
-  animation: animate2 24s linear infinite;
-  animation-delay: -12s;
-}
-@keyframes animate2 {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-200%);
-  }
-}
-
-
-
-  </style>
+  <title>Document</title>
 </head>
-
 <body>
-  <div class="scroll img-box" style="--t: 25s">
-    <div>
-      <div class="bg" style="--r: 0;">1</div>
-      <div class="bg" style="--r: 40;">2</div>
-      <div class="bg" style="--r: 80;">3</div>
-      <div class="bg" style="--r: 120;">4</div>
-      <div class="bg" style="--r: 160;">5</div>
-    </div>
-
-    <div>
-      <div class="bg" style="--r: 0;">1-1</div>
-      <div class="bg" style="--r: 40;">2-1</div>
-      <div class="bg" style="--r: 80;">3-1</div>
-      <div class="bg" style="--r: 120;">4-1</div>
-      <div class="bg" style="--r: 160;">5-1</div>
-    </div>
-  </div>
+  <script>
+    const arr1 = [  { x: 0, y: 0, key: "0" },
+  { x: 0, y: 0, key: "1" },  { x: 0, y: 0, key: "1" }, 
+  { x: 1, y: 1, key: "2" },  { x: 1, y: 2, key: "3" }, 
+  { x: 2, y: 1, key: "4" }]; 
+const arr2 = [  { x: 0, y: 0, key: "0" },
+  { x: 0, y: 0, key: "1" },  
+  { x: 0, y: 0, key: "2" },  
+  { x: 0, y: 0, key: "3" },  
+  { x: 0, y: 0, key: "4" },  
+  { x: 0, y: 0, key: "5" }, 
+  { x: 0, y: 0, key: "6" },  
+  { x: 0, y: 0, key: "7" }, 
+  { x: 0, y: 0, key: "8" }, 
+  { x: 0, y: 0, key: "9" },  
+  { x: 1, y: 1, key: "10" },  
+  { x: 1, y: 2, key: "11" },  
+  { x: 2, y: 1, key: "12" }]; 
+//解决超过10数据后排序异常问题
+// 1.增加第三个参数的判断。
+(compare === 1时 
+a.x > b.x || (a.x === b.x && a.y > b.y)|| (a.x === b.x&& a.key > b.key && a.y === b.y))
+compare === 0 时 a.x === b.x && a.y === b.y&& a.key === b.key)
+// //2.可以按照 compare === 0 的时候 直接返回 a.key - b.key 
+    const compare = (a, b) => {  
+      if (a.x > b.x || (a.x === b.x && a.y > b.y)|| (a.x === b.x && a.key > b.key && a.y === b.y)) {    
+        console.log("1a.x:"+a.x+" ,b.x:"+b.x);    
+        console.log("1a.y:"+a.y+" ,b.y:"+b.y);    
+        return 1;//第一个参数比第二个大  }  
+      if (a.x === b.x && a.y === b.y && a.key === b.key) {     
+        console.log("0a.x:"+a.x+" ,b.x:"+b.x);   
+         console.log("0a.y:"+a.y+" ,b.y:"+b.y);    
+      return 0;//两个参数相等  }   console.log("-1a.x:"+a.x+" ,b.x:"+b.x);
+    console.log("-1a.y:"+a.y+" ,b.y:"+b.y);
+      return -1;//第一个参数比第二个小}; 
+  const sort = arr => {  return [...arr].sort(compare);}; 
+  console.log(sort(arr1));
+console.log(sort(arr2));
+  </script>
 </body>
-
 </html>
