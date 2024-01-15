@@ -1,9 +1,20 @@
+/*
+ * @Author: xiehongchen 1754581057@qq.com
+ * @Date: 2024-01-08 15:57:37
+ * @LastEditors: xiehongchen 1754581057@qq.com
+ * @LastEditTime: 2024-01-15 14:24:57
+ * @FilePath: /TestCase/算法/leeCode算法/e-合并两个有序数组.js
+ * @Description: leetcode 面试经典150题 88-简单-合并两个有序数组
+ */
 /**
  * @param {number[]} nums1
  * @param {number} m
  * @param {number[]} nums2
  * @param {number} n
  * @return {void} Do not return anything, modify nums1 in-place instead.
+ */
+/**
+ * @default
  */
 // 1、三指针，从后往前遍历
 // const merge = function (nums1, m, nums2, n) {
