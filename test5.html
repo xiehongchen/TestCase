@@ -2,7 +2,7 @@
  * @Author: xiehongchen 1754581057@qq.com
  * @Date: 2024-01-24 16:24:27
  * @LastEditors: xiehongchen 1754581057@qq.com
- * @LastEditTime: 2024-01-24 17:24:17
+ * @LastEditTime: 2024-01-25 16:55:53
  * @FilePath: /TestCase/test5.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -13,37 +13,25 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+  </style>
 </head>
 <body>
   <script>
+const setA = new Set([1, 2, 3]);
+const setB = new Set([2, 3, 4]);
 
-const obj = {
-  name: "why",
-  age: 18,
-  height: 1.88,
-  address: "广州市"
-}
+// 并集
+const union = new Set([...setA, ...setB]);
+console.log(union); // Set {1, 2, 3, 4}
 
-// 1.获取所有的key
-const keys = Object.keys(obj)
-console.log(keys)
+// 交集
+const intersection = new Set([...setA].filter(x => setB.has(x)));
+console.log(intersection); // Set {2, 3}
 
-// 2.ES8 Object.values
-const values = Object.values(obj)
-console.log(values)
-
-// 3.ES8 Object.entries
-// 3.1. 对对象操作
-const entries = Object.entries(obj)
-console.log(entries)
-for (const entry of entries) {
-  const [key, value] = entry
-  console.log(key, value)
-}
-
-// 3.2. 对数组/字符串操作(了解)
-console.log(Object.entries(["abc", "cba"]))
-console.log(Object.entries("Hello"))
+// 差集
+const difference = new Set([...setA].filter(x => !setB.has(x)));
+console.log(difference); // Set {1}
   </script>
 </body>
 </html>

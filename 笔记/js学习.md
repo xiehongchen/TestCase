@@ -142,3 +142,411 @@ console.log(Object.entries("Hello"))
 > await右边的表达式还是会
 >
 > script标签本身是一个宏任务，当页面出现多个script标签的时候，浏览器会把script标签作为宏任务来解析
+
+
+
+### set和map
+
+#### Set
+
+##### 去重
+
+使用 Set 可以轻松地进行数组去重操作，因为 Set 只能存储唯一的值。
+
+```javascript
+const arr = [1, 2, 3, 1, 2, 4, 5];
+const uniqueArr = [...new Set(arr)];
+console.log(uniqueArr); // [1, 2, 3, 4, 5]
+```
+
+##### 数组转换
+
+可以使用 Set 将数组转换为不包含重复元素的 Set 对象，再使用 Array.from() 将其转换回数组。
+
+```javascript
+const arr = [1, 2, 3, 1, 2, 4, 5];
+const set = new Set(arr);
+const uniqueArr = Array.from(set);
+console.log(uniqueArr); // [1, 2, 3, 4, 5]
+```
+
+##### 优化数据查找
+
+使用 Set 存储数据时，查找操作的时间复杂度为 O(1)，比数组的 O(n) 要快得多，因此可以使用 Set 来优化数据查找的效率。
+
+```js
+const dataSet = new Set([1, 2, 3, 4, 5]);
+
+if (dataSet.has(3)) {
+  console.log('数据已经存在');
+} else {
+  console.log('数据不存在');
+}
+```
+
+##### 并集、交集、差集
+
+Set数据结构可以用于计算两个集合的并集、交集和差集。以下是一些使用Set进行集合运算的示例代码：
+
+```js
+const setA = new Set([1, 2, 3]);
+const setB = new Set([2, 3, 4]);
+
+// 并集
+const union = new Set([...setA, ...setB]);
+console.log(union); // Set {1, 2, 3, 4}
+
+// 交集
+const intersection = new Set([...setA].filter(x => setB.has(x)));
+console.log(intersection); // Set {2, 3}
+
+// 差集
+const difference = new Set([...setA].filter(x => !setB.has(x)));
+console.log(difference); // Set {1}
+```
+
+##### 模糊搜索
+
+Set 还可以通过正则表达式实现模糊搜索。可以将匹配结果保存到 Set 中，然后使用 Array.from() 方法将 Set 转换成数组。
+
+```javascript
+const data = ['apple', 'banana', 'pear', 'orange'];
+
+// 搜索以 "a" 开头的水果
+const result = Array.from(new Set(data.filter(item => /^a/i.test(item))));
+console.log(result); // ["apple"]
+```
+
+##### 使用 Set 替代数组实现队列和栈
+
+可以使用 Set 来模拟队列和栈的数据结构。
+
+```js
+// 使用 Set 实现队列
+const queue = new Set();
+queue.add(1);
+queue.add(2);
+queue.add(3);
+queue.delete(queue.values().next().value); // 删除第一个元素
+console.log(queue); // Set(2) { 2, 3 }
+
+// 使用 Set 实现栈
+const stack = new Set();
+stack.add(1);
+stack.add(2);
+stack.add(3);
+stack.delete([...stack][stack.size - 1]); // 删除最后一个元素
+console.log(stack); // Set(2) { 1, 2 }
+```
+
+#### Map
+
+##### 将 Map 转换为对象
+
+```js
+const map = new Map().set('key1', 'value1').set('key2', 'value2');
+const obj = Object.fromEntries(map);
+```
+
+##### 将 Map 转换为数组
+
+```js
+const map = new Map().set('key1', 'value1').set('key2', 'value2');
+const array = Array.from(map);
+```
+
+##### 记录数据的顺序
+
+如果你需要记录添加元素的顺序，那么可以使用`Map`来解决这个问题。当你需要按照添加顺序迭代元素时，可以使用`Map`来保持元素的顺序。
+
+```javascript
+const map = new Map();
+map.set('a', 1);
+map.set('b', 2);
+map.set('c', 3);
+map.set('d', 4);
+
+for (const [key, value] of map) {
+  console.log(key, value);
+}
+// Output: a 1, b 2, c 3, d 4
+```
+
+##### 统计数组中元素出现次数
+
+可以使用 Map 统计数组中每个元素出现的次数。
+
+```javascript
+const arr = [1, 2, 3, 1, 2, 4, 5];
+
+const countMap = new Map();
+arr.forEach(item => {
+  countMap.set(item, (countMap.get(item) || 0) + 1);
+});
+
+console.log(countMap.get(1)); // 2
+console.log(countMap.get(2)); // 2
+console.log(countMap.get(3)); // 1
+```
+
+##### 统计字符出现次数
+
+使用Map数据结构可以方便地统计字符串中每个字符出现的次数。
+
+```javascript
+const str = 'hello world';
+const charCountMap = new Map();
+for (let char of str) {
+  charCountMap.set(char, (charCountMap.get(char) || 0) + 1);
+}
+console.log(charCountMap); // Map { 'h' => 1, 'e' => 1, 'l' => 3, 'o' => 2, ' ' => 1, 'w' => 1, 'r' => 1, 'd' => 1 }
+```
+
+##### 缓存计算结果
+
+在处理复杂的计算时，可能需要对中间结果进行缓存以提高性能。可以使用Map数据结构缓存计算结果，以避免重复计算。
+
+```javascript
+const cache = new Map();
+function fibonacci(n) {
+  if (n === 0 || n === 1) {
+    return n;
+  }
+  if (cache.has(n)) {
+    return cache.get(n);
+  }
+  const result = fibonacci(n - 1) + fibonacci(n - 2);
+  cache.set(n, result);
+  return result;
+}
+console.log(fibonacci(10)); // 55
+```
+
+##### 使用 Map 进行数据的分组
+
+```javascript
+const students = [
+  { name: "Tom", grade: "A" },
+  { name: "Jerry", grade: "B" },
+  { name: "Kate", grade: "A" },
+  { name: "Mike", grade: "C" },
+];
+
+const gradeMap = new Map();
+students.forEach((student) => {
+  const grade = student.grade;
+  if (!gradeMap.has(grade)) {
+    gradeMap.set(grade, [student]);
+  } else {
+    gradeMap.get(grade).push(student);
+  }
+});
+
+console.log(gradeMap.get("A")); // [{ name: "Tom", grade: "A" }, { name: "Kate", grade: "A" }]
+```
+
+##### 使用 Map 过滤符合条件的对象
+
+在实际开发中，我们常常需要在一个对象数组中查找符合某些条件的对象。此时，我们可以结合使用 Map 和 filter 方法来实现。比如：
+
+```javascript
+const users = [
+  { name: 'Alice', age: 22 },
+  { name: 'Bob', age: 18 },
+  { name: 'Charlie', age: 25 }
+];
+const userMap = new Map(users.map(user => [user.name, user]));
+const result = users.filter(user => userMap.has(user.name) && user.age > 20);
+console.log(result); // [{ name: 'Alice', age: 22 }, { name: 'Charlie', age: 25 }]
+```
+
+首先，我们将对象数组转换为 Map，以便快速查找。然后，我们使用 filter 方法来过滤符合条件的对象。
+
+
+
+### reduce
+
+reduce 函数可以根据需要进行累加、过滤、分组、映射等操作，是一个非常强大的数组方法。在数据处理时使用的非常频繁，很多复杂的逻辑如果用reduce去处理，都非常的简洁，在实际的开发工作过程中，积累了一些常见又超级好用的 reduce 技巧的代码片段，筛选了如下 10 个，以供大家参考
+
+#### reduce 介绍
+
+`reduce` 是数组的方法，可以对数组中的每个元素依次执行一个回调函数，从左到右依次累积计算出一个最终的值。其语法为：
+
+> arr.reduce(callback(accumulator, currentValue[, index[, array]])[, initialValue])
+
+其中，`callback` 是每个元素执行的回调函数，其包含 4 个参数：
+
+- `accumulator`：累积器，即上一次回调函数执行的返回值。
+- `currentValue`：当前元素的值。
+- `index`：当前元素的下标。
+- `array`：原始数组。
+
+`initialValue` 是可选的，表示累积器的初始值。
+
+`reduce` 函数的执行过程如下：
+
+1. 如果没有提供 `initialValue`，则将数组的第一个元素作为累积器的初始值，否则将 `initialValue` 作为累积器的初始值。
+2. 从数组的第二个元素开始，依次对数组中的每个元素执行回调函数。
+3. 回调函数的返回值作为下一次回调函数执行时的累积器的值。
+4. 对数组中的每个元素执行完回调函数后，`reduce` 函数返回最后一次回调函数的返回值，即最终的累积值。
+
+#### 计算数组中每个元素出现的次数
+
+```js
+const fruits = ['apple', 'banana', 'apple', 'orange', 'banana', 'apple'];
+const count = fruits.reduce((accumulator, currentValue) => {
+  accumulator[currentValue] = (accumulator[currentValue] || 0) + 1;
+  return accumulator;
+}, {});
+console.log(count); // Output: { apple: 3, banana: 2, orange: 1 }
+```
+
+#### 拍平嵌套数组
+
+```js
+const nestedArray = [[1, 2], [3, 4], [5, 6]];
+const flattenedArray = nestedArray.reduce((accumulator, currentValue) => accumulator.concat(currentValue), []);
+console.log(flattenedArray); // Output: [1, 2, 3, 4, 5, 6]
+```
+
+#### 按条件分组
+
+```js
+const people = [
+  { name: 'Alice', age: 25 },
+  { name: 'Bob', age: 30 },
+  { name: 'Charlie', age: 35 },
+  { name: 'David', age: 25 },
+  { name: 'Emily', age: 30 }
+];
+const groupedPeople = people.reduce((accumulator, currentValue) => {
+  const key = currentValue.age;
+  if (!accumulator[key]) {
+    accumulator[key] = [];
+  }
+  accumulator[key].push(currentValue);
+  return accumulator;
+}, {});
+console.log(groupedPeople);
+// Output: {
+//   25: [{ name: 'Alice', age: 25 }, { name: 'David', age: 25 }],
+//   30: [{ name: 'Bob', age: 30 }, { name: 'Emily', age: 30 }],
+//   35: [{ name: 'Charlie', age: 35 }]
+// }
+```
+
+#### 将多个数组合并为一个对象
+
+```js
+const keys = ['name', 'age', 'gender'];
+const values = ['Alice', 25, 'female'];
+const person = keys.reduce((accumulator, currentValue, index) => {
+    accumulator[currentValue] = values[index];
+    return accumulator;
+  }, {});
+console.log(person); // Output: { name: 'Alice', age: 25, gender: 'female' }
+```
+
+#### 将字符串转换为对象
+
+```js
+const str = 'key1=value1&key2=value2&key3=value3';
+const obj = str.split('&').reduce((accumulator, currentValue) => {
+  const [key, value] = currentValue.split('=');
+  accumulator[key] = value;
+  return accumulator;
+}, {});
+console.log(obj); 
+// Output: { key1: 'value1', key2: 'value2', key3: 'value3' }
+```
+
+#### 将对象转换为查询字符串
+
+```js
+const params = { foo: "bar", baz: 42 };
+const queryString = Object.entries(params).reduce((acc, [key, value]) => {
+  return `${acc}${key}=${value}&`;
+}, "?").slice(0, -1);
+console.log(queryString); // "?foo=bar&baz=42"
+```
+
+#### 打印斐波那契数列
+
+```js
+const fibonacci = n => {
+  return [...Array(n)].reduce((accumulator, currentValue, index) => {
+    if (index < 2) {
+      accumulator.push(index);
+    } else {
+      accumulator.push(accumulator[index - 1] + accumulator[index - 2]);
+    }
+    return accumulator;
+  }, []);
+};
+console.log(fibonacci(10)); // Output: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+```
+
+#### 检查字符串是否是回文字符串
+
+```js
+const str = 'racecar';
+const isPalindrome = str.split('').reduce((accumulator, currentValue, index, array) => {
+  return accumulator && currentValue === array[array.length - index - 1];
+}, true);
+console.log(isPalindrome); // Output: true
+```
+
+#### 检查括号是否匹配
+
+```js
+const str = "(()()())";
+const balanced = str.split("").reduce((acc, cur) => {
+  if (cur === "(") {
+    acc++;
+  } else if (cur === ")") {
+    acc--;
+  }
+  return acc;
+}, 0) === 0;
+console.log(balanced); // true
+```
+
+#### 递归获取对象属性
+
+```js
+const user = {
+  info: {
+    name: "Jason",
+    address: { home: "Shaanxi", company: "Xian" },
+  },
+};
+function get(config, path, defaultVal) {
+  return path.split('.').reduce((config, name) => config[name], config) || defaultVal;
+}
+get(user, "info.name"); // Jason
+get(user, "info.address.home"); // Shaanxi
+get(user, "info.address.company"); // Xian
+get(user, "info.address.abc", "default"); // default
+```
+
+#### 手写 reduce
+
+可以通过手写一个简单的 `reduce` 函数来更好地理解它的实现原理：
+
+```js
+function myReduce(arr, callback, initialValue) {
+  let accumulator = initialValue === undefined ? arr[0] : initialValue;
+  for (let i = initialValue === undefined ? 1 : 0; i < arr.length; i++) {
+    accumulator = callback(accumulator, arr[i], i, arr);
+  }
+  return accumulator;
+}
+```
+
+上面的代码中，`myReduce` 函数接受 3 个参数：要执行 `reduce` 操作的数组 `arr`、回调函数 `callback` 和累积器的初始值 `initialValue`。如果没有提供初始值，则将数组的第一个元素作为累积器的初始值。
+
+接下来，在循环中，如果有 initialValue，则从第一个元素开始遍历 callback，此时 callabck 的第二个参数是从数组的第一项开始的；如果没有 initialValue，则从第二个元素开始遍历 callback，此时 callback 的第二个参数是从数组的第二项开始的从数组的第二个元素开始，依次对数组中的每个元素执行回调函数，并将返回值作为下一次回调函数执行时的累积器的值。
+
+最后，`myReduce` 函数返回最后一次回调函数的返回值，即最终的累积值。
+
+这个简易的 `reduce` 函数并没有考虑很多边界情况和复杂的应用场景，但是可以帮助我们更好地理解 `reduce` 函数的实现原理。
