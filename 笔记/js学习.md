@@ -1,6 +1,4 @@
-## js学习
-
-### js执行过程
+## js执行过程
 
 1. 词法分析：将代码的字符串分析得到词法单元token
 2. 语法分析：将词法单元流解析成AST（抽象语法树），该过程包括词法作用域的生成、变量提升等阶段
@@ -10,7 +8,7 @@
 
 
 
-### js作用域与作用域链
+## js作用域与作用域链
 
 在es5之前，js只有**全局作用域**及**函数作用域**。es6引入了块级作用域。但是这个块级别作用域需要注意的是不是`{}`的作用域，而是`let`，`const`关键字的**块级作用域**
 
@@ -18,7 +16,7 @@
 
 
 
-### 词法环境
+## 词法环境
 
 词法环境是一个包含标识符变量映射的结构。（这里的标识符表示变量/函数的名称，变量是对实际对象【包括函数类型对象】或原始值的引用）。在词法环境中，有两个组成部分：（1）环境记录（environment record） （2）对外部环境的引用
 
@@ -53,7 +51,7 @@
    
 
 
-### 浅拷贝、深拷贝
+## 浅拷贝、深拷贝
 
 ```js
 const obj = {
@@ -92,7 +90,7 @@ console.log('obj', obj)
 
 
 
-### ES8-对象相关的属性
+## ES8-对象相关的属性
 
 ```js
 const obj = {
@@ -135,7 +133,7 @@ console.log(Object.entries("Hello"))
 
 
 
-### 事件循环机制
+## 事件循环机制
 
 > promise本身是一个同步的代码，只有它后面调用的then()方法里的回调才是微任务
 >
@@ -145,11 +143,11 @@ console.log(Object.entries("Hello"))
 
 
 
-### set和map
+## set、map、reduce
 
-#### Set
+### Set
 
-##### 去重
+#### 去重
 
 使用 Set 可以轻松地进行数组去重操作，因为 Set 只能存储唯一的值。
 
@@ -159,7 +157,7 @@ const uniqueArr = [...new Set(arr)];
 console.log(uniqueArr); // [1, 2, 3, 4, 5]
 ```
 
-##### 数组转换
+#### 数组转换
 
 可以使用 Set 将数组转换为不包含重复元素的 Set 对象，再使用 Array.from() 将其转换回数组。
 
@@ -170,7 +168,7 @@ const uniqueArr = Array.from(set);
 console.log(uniqueArr); // [1, 2, 3, 4, 5]
 ```
 
-##### 优化数据查找
+#### 优化数据查找
 
 使用 Set 存储数据时，查找操作的时间复杂度为 O(1)，比数组的 O(n) 要快得多，因此可以使用 Set 来优化数据查找的效率。
 
@@ -184,7 +182,7 @@ if (dataSet.has(3)) {
 }
 ```
 
-##### 并集、交集、差集
+#### 并集、交集、差集
 
 Set数据结构可以用于计算两个集合的并集、交集和差集。以下是一些使用Set进行集合运算的示例代码：
 
@@ -205,7 +203,7 @@ const difference = new Set([...setA].filter(x => !setB.has(x)));
 console.log(difference); // Set {1}
 ```
 
-##### 模糊搜索
+#### 模糊搜索
 
 Set 还可以通过正则表达式实现模糊搜索。可以将匹配结果保存到 Set 中，然后使用 Array.from() 方法将 Set 转换成数组。
 
@@ -217,7 +215,7 @@ const result = Array.from(new Set(data.filter(item => /^a/i.test(item))));
 console.log(result); // ["apple"]
 ```
 
-##### 使用 Set 替代数组实现队列和栈
+#### 使用 Set 替代数组实现队列和栈
 
 可以使用 Set 来模拟队列和栈的数据结构。
 
@@ -239,23 +237,23 @@ stack.delete([...stack][stack.size - 1]); // 删除最后一个元素
 console.log(stack); // Set(2) { 1, 2 }
 ```
 
-#### Map
+### Map
 
-##### 将 Map 转换为对象
+#### 将 Map 转换为对象
 
 ```js
 const map = new Map().set('key1', 'value1').set('key2', 'value2');
 const obj = Object.fromEntries(map);
 ```
 
-##### 将 Map 转换为数组
+#### 将 Map 转换为数组
 
 ```js
 const map = new Map().set('key1', 'value1').set('key2', 'value2');
 const array = Array.from(map);
 ```
 
-##### 记录数据的顺序
+#### 记录数据的顺序
 
 如果你需要记录添加元素的顺序，那么可以使用`Map`来解决这个问题。当你需要按照添加顺序迭代元素时，可以使用`Map`来保持元素的顺序。
 
@@ -272,7 +270,7 @@ for (const [key, value] of map) {
 // Output: a 1, b 2, c 3, d 4
 ```
 
-##### 统计数组中元素出现次数
+#### 统计数组中元素出现次数
 
 可以使用 Map 统计数组中每个元素出现的次数。
 
@@ -289,7 +287,7 @@ console.log(countMap.get(2)); // 2
 console.log(countMap.get(3)); // 1
 ```
 
-##### 统计字符出现次数
+#### 统计字符出现次数
 
 使用Map数据结构可以方便地统计字符串中每个字符出现的次数。
 
@@ -302,7 +300,7 @@ for (let char of str) {
 console.log(charCountMap); // Map { 'h' => 1, 'e' => 1, 'l' => 3, 'o' => 2, ' ' => 1, 'w' => 1, 'r' => 1, 'd' => 1 }
 ```
 
-##### 缓存计算结果
+#### 缓存计算结果
 
 在处理复杂的计算时，可能需要对中间结果进行缓存以提高性能。可以使用Map数据结构缓存计算结果，以避免重复计算。
 
@@ -322,7 +320,7 @@ function fibonacci(n) {
 console.log(fibonacci(10)); // 55
 ```
 
-##### 使用 Map 进行数据的分组
+#### 使用 Map 进行数据的分组
 
 ```javascript
 const students = [
@@ -345,7 +343,7 @@ students.forEach((student) => {
 console.log(gradeMap.get("A")); // [{ name: "Tom", grade: "A" }, { name: "Kate", grade: "A" }]
 ```
 
-##### 使用 Map 过滤符合条件的对象
+#### 使用 Map 过滤符合条件的对象
 
 在实际开发中，我们常常需要在一个对象数组中查找符合某些条件的对象。此时，我们可以结合使用 Map 和 filter 方法来实现。比如：
 
