@@ -1,4 +1,27 @@
-const cvs = document.querySelector('canvas')
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        canvas{
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        const cvs = document.querySelector('canvas')
 const ctx = cvs.getContext('2d')
 
 // 初始化画布
@@ -57,3 +80,6 @@ function getRandomChar() {
 draw();
 // 一直循环
 setInterval(draw,50);
+    </script>
+</body>
+</html>

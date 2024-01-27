@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="fireworksCanvas"></canvas>
+    <script>
+        // set canvas variables
+        const myCanvas = document.getElementById("fireworksCanvas");
+        const ctx = myCanvas.getContext('2d');
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        // set variables
+        const particleCount = 30;
+        const particles = [];
+
+        // initiate the window
+        window.onload = function () {
+            setCanvasDimensions();
+            setInterval(updateFireworkFrame, 60);
+        }
+
+        // set canvas dimensions
+        function setCanvasDimensions() {
+            myCanvas.width = width;
+            myCanvas.height = height;
+        }
+
+        // create Particle object
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.radius = Math.random() * 9 + 1;
+                this.alpha = 1;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 10,
+                    y: (Math.random() - 0.5) * 10
+                }
+            }
+            draw() {
+                // create circle stroke
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+                ctx.fill();
+            }
+            update() {
+                // change position and alpha
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= 0.01;
+            }
+        }
+
+        // create initial firework
+        function createFirework(x, y) {
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(x, y, Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256) + "," + Math.floor(Math.random() * 256)));
+            }
+        }
+
+        // update firework frame
+        function updateFireworkFrame() {
+            // clear the canvas
+            ctx.fillStyle = `rgba(0,0,0,0.2)`;
+            ctx.fillRect(0, 0, width, height);
+
+            // loop through particles
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].draw();
+                particles[i].update();
+                if (particles[i].alpha <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            // check if creating new firework
+            if (Math.random() > 0.95) {
+                createFirework(Math.random() * width, height);
+            }
+        }
+
+    </script>
+</body>
+
+</html>
