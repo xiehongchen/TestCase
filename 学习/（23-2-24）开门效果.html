@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开门效果</title>
+    <style>
+        .box {
+            width: 1920px;
+            height: 1080px;
+            /* background-color: red; */
+            background: url(./images/Capture001.png);
+            margin: 0 auto;
+
+        }
+
+        .box::before,
+        .box::after {
+            content: '';
+            width: 50%;
+            height: 1080px;
+            /* 过渡 */
+            transition: .4s ease;
+            background: url(./images/Capture002.png) no-repeat;
+        }
+
+        .box::before {
+            float: left;
+            background-color: red;
+        }
+
+        .box::after {
+            float: right;
+            background-color: black;
+            background-position: right;
+        }
+
+        .box:hover::before {
+            transform: translateX(-100%);
+        }
+        .box:hover::after{
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+</body>
+
+</html>

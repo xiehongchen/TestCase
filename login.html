@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>绘制以二维码为中心的图片</title>
+    <style>
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" style="width: 600px;height: 600px;"></canvas>
+
+    <script>
+        window.onload = function () {
+            var canvas = document.getElementById("myCanvas");
+            var context = canvas.getContext("2d");
+
+
+            var boxWidth = 200;
+            var boxHeight = 200;
+            var boxX = canvas.width / 2 - boxWidth / 2;
+            var boxY = canvas.height / 2 - boxHeight / 2;
+            context.fillStyle = "blue";
+            context.fillRect(boxX, boxY, boxWidth, boxHeight);
+
+            var topText = "居中布局的文字";
+            context.font = "18px Arial";
+            context.textAlign = "center";
+            context.fillStyle = "black";
+            context.fillText(topText, 200, 50);
+
+            var image = new Image();
+            image.src = "./images/Capture001.png";
+            image.onload = function () {
+                var imageWidth = 100; // 图片的宽度
+                var imageHeight = 100; // 图片的高度
+                var imageX = canvas.width / 2 - imageWidth / 2; // 计算图片的水平居中位置
+                var imageY = canvas.height / 2 - imageHeight / 2; // 计算图片的垂直居中位置
+
+                context.drawImage(image, imageX, imageY, imageWidth, imageHeight); // 绘制图片并居中\
+
+                // 绘制边框
+                var borderWidth = 10; // 边框的宽度
+                var cornerSize = 20; // 边框角的大小
+                var borderColor = "red"; // 边框的颜色
+
+                // 绘制左上角边框
+                context.fillStyle = borderColor;
+                context.fillRect(imageX - borderWidth, imageY - borderWidth, borderWidth, cornerSize); // 左边框
+                context.fillRect(imageX - borderWidth, imageY - borderWidth, cornerSize, borderWidth); // 上边框
+
+                // 绘制右上角边框
+                context.fillRect(imageX + imageWidth, imageY - borderWidth, borderWidth, cornerSize); // 右边框
+                context.fillRect(imageX + imageWidth - cornerSize, imageY - borderWidth, cornerSize, borderWidth); // 上边框
+
+                // 绘制左下角边框
+                context.fillRect(imageX - borderWidth, imageY + imageHeight - cornerSize, cornerSize, borderWidth); // 下边框
+                context.fillRect(imageX - borderWidth, imageY + imageHeight, borderWidth, cornerSize); // 左边框
+
+                // 绘制右下角边框
+                context.fillRect(imageX + imageWidth - cornerSize, imageY + imageHeight - borderWidth, cornerSize, borderWidth); // 下边框
+                context.fillRect(imageX + imageWidth, imageY + imageHeight - cornerSize, borderWidth, cornerSize); // 右边框
+            };
+
+
+            var bottomText = "下方的文字";
+            context.font = "18px Arial";
+            context.textAlign = "center";
+            context.fillStyle = "black";
+            context.fillText(bottomText, 200, canvas.height - 10);
+
+        };
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>多个文本打字效果</title>
+</head>
+<body>
+  <h1 id="text1"></h1>
+  <h1 id="text2"></h1>
+
+  <script>
+    // 文本数组
+    var texts = [
+      "这是第一段文本。",
+      "这是第二段文本。",
+      "这是第三段文本。"
+    ];
+
+    // 当前文本索引
+    var currentTextIndex = 0;
+
+    // 打字速度（毫秒）
+    var typingSpeed = 100;
+
+    // 获取文本元素
+    var textElement1 = document.getElementById('text1');
+    var textElement2 = document.getElementById('text2');
+
+    // 初始化打字效果
+    function initTypingEffect() {
+      // 设置文本为空
+      textElement1.textContent = "";
+      textElement2.textContent = "";
+
+      // 开始打字效果
+      typeText(textElement1, 0);
+    //   typeText(textElement2, 1);
+    }
+
+    // 打字效果函数
+    function typeText(element, index) {
+      if (index < texts[currentTextIndex].length) {
+        // 获取当前文本
+        var currentText = texts[currentTextIndex];
+
+        // 逐个添加字符
+        element.textContent += currentText.charAt(index);
+
+        // 延迟调用下一个字符
+        setTimeout(function() {
+          typeText(element, index + 1);
+        }, typingSpeed);
+      } else {
+        // 打字效果完成后，延迟一段时间并开始删除文本
+        setTimeout(function() {
+          deleteText(element, currentTextIndex);
+        }, 1000);
+      }
+    }
+
+    // 删除文本函数
+    function deleteText(element, index) {
+      if (element.textContent.length > 0) {
+        // 逐个删除字符
+        element.textContent = element.textContent.slice(0, -1);
+
+        // 延迟调用下一个删除操作
+        setTimeout(function() {
+          deleteText(element, index);
+        }, typingSpeed / 2);
+      } else {
+        // 删除完成后，切换到下一个文本
+        currentTextIndex = (currentTextIndex + 1) % texts.length;
+
+        // 开始打字效果
+        typeText(element, 0);
+      }
+    }
+
+    // 初始化打字效果
+    initTypingEffect();
+  </script>
+</body>
+</html>
