@@ -1,4 +1,4 @@
-## 为什么要使用`ref()`函数来声明响应式状态
+# 为什么要使用`ref()`函数来声明响应式状态
 
 > **[为什么要使用ref ?](https://cn.vuejs.org/guide/essentials/reactivity-fundamentals.html#why-refs)**
 >
@@ -26,3 +26,14 @@
 > ```
 >
 > 另一个 ref 的好处是，与普通变量不同，你可以将 ref 传递给函数，同时保留对最新值和响应式连接的访问。当将复杂的逻辑重构为可重用的代码时，这将非常有用。
+
+
+
+# computed和watch对比
+
+
+
+# vue的模版编译
+
+模板字符串 -> 解析器 -> AST -> 优化器 -> AST -> 代码生成器 -> 渲染函数
+

@@ -14,6 +14,215 @@
 
 作用域链：[[scope]]中所存储的执行期上下文对象的`集合`，这个集合呈`链式连接`，我们把这种链式连接叫做`作用域链`
 
+copy from [掘金文章地址](https://juejin.cn/post/7287524648808366091)
+
+很明了，就不自己写了:smile:
+
+#### 函数
+
+先来看一下上古时期的工作中我们是如何定义函数的，直接使用 `function` 关键字来声明
+
+```js
+function fun() {}
+```
+
+但是有的时候我们会发现函数也会用下面的这种格式来定义
+
+```js
+function Fun() {}
+```
+
+除了第二个 **函数名的首字母大写之外**，本质上两者毫无区别 
+
+#### 函数名首字母大写的意义
+
+当我们需要将一个函数作为 **构造函数** 使用时，通常会将函数名首字母大写，为了看起来规范一些，仅此而已 
+
+#### 实例化
+
+对 **构造函数** 使用 `new` 关键字可以创建出不同的 **实例（实例的本质就是一个对象）**，就好比说：你没有女朋友，但是你可以准备一个构造函数 new 很多女朋友出来，就是这个意思！
+
+#### 开造
+
+- 构造函数（女朋友构造器）：
+
+```js
+function GirlFriend() {}
+```
+
+- 创建第一个 gf1 （实例对象）
+
+```javascript
+const gf1 = new GirlFriend()
+
+gf1.name = '小美'
+gf1.age = 18
+
+console.log(gf1)  // {name: '小美', age: 18}
+```
+
+- 创建第二个 gf2 （实例对象）
+
+```javascript
+const gf2 = new GirlFriend()
+
+gf2.name = '小丽'
+gf2.age = 19
+
+console.log(gf2) // {name: '小丽', age: 19}
+```
+
+
+
+#### 关联
+
+- `GirlFriend` 是一个 **构造函数**
+- `gf1` 和 `gf2` 是通过 `new GirlFriend` 创建出来的两个 **实例对象**
+
+那如何将 **实例对象** 和 **构造函数** 联系在一起呢？
+
+- 在 **实例对象** 上会默认存在一个属性叫做 `__proto__`，这里记作 **隐式原型**
+- 在 **构造函数** 上会默认存在一个属性叫做 `prototype`，这里记作 **显示原型 **
+
+通常我们所说的 **原型对象** 也就是指这里的 `prototype`，**原型对象** 上的 `constructor`属性可以直接访问该 **构造函数**（这里建议手动打印观察一下）
+默认情况下，**实例对象** 的 `__proto__` 指向 **构造函数** 的 `prototype`，如果你想访问某个实例的原型对象，就可以通过如下关系来进行访问
+
+```javascript
+console.log(GirlFriend.prototype.constructor) // ƒ GirlFriend() {}
+gf1.__proto__ === GirlFriend.prototype // true
+gf2.__proto__ === GirlFriend.prototype // true
+```
+
+![Snipaste_2024-01-30_18-38-59](/Users/mac/Desktop/test/TestCase/笔记/语言/javascript/image/Snipaste_2024-01-30_18-38-59.png)
+
+#### 访问
+
+当我需要访问 **实例对象** 上存在的属性，比如 `name` 时：
+
+```javascript
+console.log(gf1.name) // '小美'
+console.log(gf2.name) // '小丽'
+```
+
+当我需要访问 **实例对象** 上不存在的属性，比如 `feature` 时：
+
+```javascript
+console.log(gf1.feature) // undefined
+console.log(gf2.feature) // undefined
+```
+
+因为没有这个属性，自然而然就会打印 `undefined`
+但如果说我想添加一个共同的属性给所有被 **实例化的对象** 时，我该如何去处理呢？
+
+- 上面已经说明，被同一个 **构造函数** 创建出来的 **实例对象** ，默认情况下他们的 **隐式原型** 都会指向该构造函数的 **显示原型** ，也就是 `GirlFriend.prototype`，因此我只需要在往这个原型上去添加就好
+
+```javascript
+GirlFriend.prototype.feature = 'beautiful'
+```
+
+此时再次访问实例上的 `feature`属性，最终即可得到正常的打印
+
+```javascript
+console.log(gf1.feature) // beautiful
+console.log(gf2.feature) // beautiful
+```
+
+如果说我想单独给 `gf1` 添加不一样的 `feature` 再访问呢
+
+```javascript
+gf1.feature = 'pretty'
+
+console.log(gf1.feature) // pretty
+console.log(gf2.feature) // beautiful
+```
+
+但是，为什么我给 **显示原型** 添加的属性可以直接通过实例对象进行访问呢？ 
+
+#### 原理
+
+1. 每一个被 **构造函数** 创建的 **实例对象** 都是一个全新的 **对象** ，我们可以为该对象添加本身特有的属性
+2. 当我们尝试访问 **实例对象** 上的某个属性时，如果存在则会直接返回该属性的值；如果不存在，就会沿着 **实例对象** 的 `__proto__` 继续向上访问，如果查找到则会返回该属性的值，如果没有找到，则会返回 `undefined`
+
+![Snipaste_2024-01-30_18-45-43](./image/Snipaste_2024-01-30_18-45-43.png)
+
+#### 注意
+
+为了更加清晰的了解原型，这里我们再提及 js 中几个比较关键的点 
+
+###### 普通对象 - object
+
+- 只要是一个普通对象`object`，就可以用 `new Object()` 来实例化（**Object() 是一个内置的构造函数**），也就是说，所有的对象字面量都是 `Object()` 的实例
+- `Object` 作为构造函数，`Object.prototype` 指向一个具体的 **原型对象** ，该 **原型对象** 作为对象的实例，它的 `__proto__` 值为 `null`，因而 `Object.prototype.__proto__ = null` 时也就走到了 **原型的尽头**
+
+```javascript
+const obj = {}
+const obj1 = new Object()
+
+console.log(obj.__proto__ === obj1.__proto__)  // true
+console.log(obj1.__proto__ === Object.prototype) // true
+console.log(Object.prototype.____proto__) // null
+```
+
+![](./image/Snipaste_2024-01-30_18-47-36.png)
+
+回到上面那个例子，当我要访问 **实例对象** `gf1` 上的属性时：
+
+- 如果该属性存在，就会直接返回对应的值
+
+- 如果该属性不存在，就会沿着 
+
+  ```
+  gf1.__proto__
+  ```
+
+   进行查找，本质上查找的就是 
+
+  ```
+  GirlFriend.prototype
+  ```
+
+   这个对象
+
+  - 如果该属性存在，就会直接返回对应的值
+  - 如果该属性不存在，那么 `GirlFriend.prototype`作为 `Object`的实例对象，其本身也是存在`__proto__`属性的，所以会沿着 `GirlFriend.prototype.__proto__`来进行查找，本质上查找的就是`Object.prototype`
+    - 如果该属性存在，就会直接返回对应的值
+    - 如果不存在，就会查找接着查找 `Object.prototype.__proto__` ，此时 `Object.prototype.__proto__` 值为 `null` ，最终没有找到该属性，打印 `undefined`
+
+这个顺序很好理解
+
+1. `gf1.xx`
+2. `gf1.__proto__.xx`
+3. `gf1.__proto__.__proto__.xx`
+4. `gf1.__proto__.__proto__.__proto__.xx`
+
+当最终 `__proto__` 为 `null` 都没有找到时就会打印 `undefined`
+因此，沿着 `__proto__` 访问对象属性构成的这一条链也就是平时所说的 **原型链** 
+
+###### 特殊对象 - function
+
+- `function` 也算是一类特殊的对象，因此可以直接通过属性的形式来进行变量的访问
+- 已经内置了 **Function() 构造函数** ，因而 **所有函数** 都算作是 `Function` 的 **实例对象**
+  - 当 `Function` 作为 **构造函数** 时，可以访问其 `prototype` 属性
+  - 当 `Function` 作为 **实例对象** 时，可以访问其 `__proto__` 属性
+
+```javascript
+// 在 Function 这里就是：我实例化了我寄几
+console.log(Function.__proto__ === Function.prototype) // true
+console.log(Function.prototype.constructor === Function) // true
+```
+
+- 内置的 `Object()` 也是一个函数，因此 `Object` 也是我 `Function` 的 **实例对象**
+
+```javascript
+console.log(Object.__proto__ === Function.prototype) // true
+```
+
+![](./image/Snipaste_2024-01-30_18-50-19.png)
+
+#### 经典图示
+
+![](./image/Snipaste_2024-01-30_18-51-00.png)
+
 
 
 ## 词法环境
