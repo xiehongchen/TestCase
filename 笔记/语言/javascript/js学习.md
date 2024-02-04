@@ -1,4 +1,4 @@
-## js执行过程
+# js执行过程
 
 1. 词法分析：将代码的字符串分析得到词法单元token
 2. 语法分析：将词法单元流解析成AST（抽象语法树），该过程包括词法作用域的生成、变量提升等阶段
@@ -8,7 +8,7 @@
 
 
 
-## js作用域与作用域链
+# js作用域与作用域链
 
 在es5之前，js只有**全局作用域**及**函数作用域**。es6引入了块级作用域。但是这个块级别作用域需要注意的是不是`{}`的作用域，而是`let`，`const`关键字的**块级作用域**
 
@@ -225,7 +225,133 @@ console.log(Object.__proto__ === Function.prototype) // true
 
 
 
-## 词法环境
+# 变量提升
+```js
+console.log(a)  //输出的是undifined，而不是ReferenceError
+var a = 10  
+
+foo() //这个函数是undifined，报错
+var foo = function () {
+  console.log("foo1")
+}
+```
+- var定义的变量会变量提升，所以声明会被拿到函数或全局作用域的顶部，并且输出undifined。所以执行foo()的时候，foo是undifined，所以会报错。由于js按照顺序从上往下，所以当执行foo = function(){}的时候，才对foo进行赋值为一个函数。
+- 这种定义函数的方式，我们称为函数表达式。函数表达式是将函数作为一个值赋给一个变量或属性
+
+```js
+function foo() {
+  console.log("foo1")
+}
+foo()
+
+function foo() {
+  console.log("foo2")
+}
+foo()
+```
+- 函数声明会在任何代码执行之前先被读取并添加到执行上下文，也就是函数声明提升，因此第二个foo会覆盖掉第一个foo，所以输出的是两个foo
+
+```js
+var foo = function () {
+    console.log("foo1")
+}
+foo()
+
+var foo = function () {
+    console.log("foo2")
+}
+foo()
+
+
+function foo() {
+    console.log("foo3")
+}
+foo()
+
+function foo() {
+    console.log("foo4")
+}
+foo()
+```
+- 函数的变量提升优先级比var高，因此后两个foo提升上去后，被 `var foo`给覆盖了，隐藏最后执行函数`foo()`的时候，都是执行第二个`var foo`，所以输出的是foo1和3个foo2
+
+```js
+var a = 0
+console.log("1 a:"+a)
+if (true) {
+  a = 1
+  function a() {}
+  a = 5
+  console.log("2 a:"+a)
+}
+console.log("3 a:"+a)
+```
+- js执行是按顺序从上到下的，因此先输出0
+- 在if里面，也就是块级作用域，存在函数a，而在ES6之后，块级作用域中的函数声明会提升到全局，虽然提升到全局，但只有执行到这个函数的时候才会去重写块中生成对应的全局变量，否则就是重写之前声明的全局变量
+- 没有变量提升后，按顺序执行`a = 1`，if作用域不存在a，因此会向外寻找，因此赋值给全局中的变量a，此时变量a的值为1
+- 开始执行函数a，形成函数作用域，此时的a是一个函数
+- 执行`a = 5`，此时的a是一个局部变量，不是外面的全局变量，因此输出的是5
+- 此时全局变量当中的a是1，因此输出1
+
+> 函数提升优先级高于变量提升，且不会被同名变量声明时覆盖，但是会被同名变量赋值后覆盖
+> 变量提升是假提升，函数的提升是真提升，赋值后的同名变量优先级要高于同名函数
+
+JavaScript中具名的函数的声明形式有两种：
+```js
+//函数声明式：
+function foo () {}
+//变量形式声明： 
+var fn = function () {}
+```
+当使用变量形式声明函数时，和普通的变量一样会存在提升的现象，而函数声明式会提升到作用域最前边，并且将声明内容一起提升到最上边。如下：
+```js
+fn()
+var fn = function () {
+	console.log(1)  
+}
+// 输出结果：Uncaught TypeError: fn is not a function
+
+foo()
+function foo () {
+	console.log(2)
+}
+// 输出结果：2
+```
+可以看到，使用变量形式声明fn并在其前面执行时，会报错fn不是一个函数，因为此时fn只是一个变量，还没有赋值为一个函数，所以是不能执行fn方法的。
+
+## 变量提升导致的问题
+
+### 变量被覆盖
+
+```js
+var name = "JavaScript"
+function showName(){
+  console.log(name);
+  if(0){
+   var name = "CSS"
+  }
+}
+showName()
+```
+
+执行这段代码需要使用变量 name，代码中有两个 name 变量：一个在全局执行上下文中，其值是JavaScript；另外一个在 showName 函数的执行上下文中，由于if(0)永远不成立，所以 name 值是 undifined。那该使用哪个呢？**应该先使用函数执行上下文中的变量**。因为在函数执行过程中，JavaScript 会优先从当前的执行上下文中查找变量，由于变量提升的存在，当前的执行上下文中就包含了if(0)中的变量 name，其值是 undefined，所以获取到的 name 的值就是 undefined。
+
+### 变量没有被销毁
+
+```js
+function foo(){
+  for (var i = 0; i < 5; i++) {
+  }
+  console.log(i); 
+}
+foo()
+```
+
+使用其他的大部分语言实现类似代码时，在 for 循环结束之后，i 就已经被销毁了，但是在 JavaScript 代码中，i 的值并未被销毁，所以最后打印出来的是 5。这也是由变量提升而导致的，在创建执行上下文阶段，变量 i 就已经被提升了，所以当 for 循环结束之后，变量 i 并没有被销毁。
+
+
+
+# 词法环境
 
 词法环境是一个包含标识符变量映射的结构。（这里的标识符表示变量/函数的名称，变量是对实际对象【包括函数类型对象】或原始值的引用）。在词法环境中，有两个组成部分：（1）环境记录（environment record） （2）对外部环境的引用
 
@@ -260,7 +386,7 @@ console.log(Object.__proto__ === Function.prototype) // true
    
 
 
-## 浅拷贝、深拷贝
+# 浅拷贝、深拷贝
 
 ```js
 const obj = {
@@ -299,7 +425,7 @@ console.log('obj', obj)
 
 
 
-## ES8-对象相关的属性
+# ES8-对象相关的属性
 
 ```js
 const obj = {
@@ -342,7 +468,7 @@ console.log(Object.entries("Hello"))
 
 
 
-## 事件循环机制
+# 事件循环机制
 
 > promise本身是一个同步的代码，只有它后面调用的then()方法里的回调才是微任务
 >
@@ -352,7 +478,7 @@ console.log(Object.entries("Hello"))
 
 
 
-## set、map、reduce
+# set、map、reduce
 
 ### Set
 
