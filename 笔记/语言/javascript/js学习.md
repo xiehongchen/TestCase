@@ -883,3 +883,7 @@ function myReduce(arr, callback, initialValue) {
 最后，`myReduce` 函数返回最后一次回调函数的返回值，即最终的累积值。
 
 这个简易的 `reduce` 函数并没有考虑很多边界情况和复杂的应用场景，但是可以帮助我们更好地理解 `reduce` 函数的实现原理。
+
+
+
+# undifined、ReferenceError

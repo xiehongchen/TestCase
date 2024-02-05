@@ -8,28 +8,41 @@
 >
 > 该 `.value` 属性给予了 Vue 一个机会来检测 ref 何时被访问或修改。在其内部，Vue 在它的 getter 中执行追踪，在它的 setter 中执行触发。从概念上讲，你可以将 ref 看作是一个像这样的对象：
 >
-> js
->
 > ```js
-> // 伪代码，不是真正的实现
+>// 伪代码，不是真正的实现
 > const myRef = {
->   _value: 0,
->   get value() {
->     track()
->     return this._value
->   },
->   set value(newValue) {
->     this._value = newValue
->     trigger()
->   }
-> }
-> ```
->
+> _value: 0,
+> get value() {
+>    track()
+>    return this._value
+>    },
+>    set value(newValue) {
+>    this._value = newValue
+>    trigger()
+>    }
+>    }
+>   ```
+> 
 > 另一个 ref 的好处是，与普通变量不同，你可以将 ref 传递给函数，同时保留对最新值和响应式连接的访问。当将复杂的逻辑重构为可重用的代码时，这将非常有用。
 
 
 
-# computed和watch对比
+# computed和watch、watchEffect
+
+| 对比依据              | computed | watch            | watchEffect |
+| --------------------- | -------- | ---------------- | ----------- |
+| 是否自动收集依赖（1） | 自动     | 需要指定依赖对象 | 自动        |
+| 有无返回值            | 有       | 无               | 有          |
+| 是否可以赋值          | 可以     | 不能             | 不能        |
+| 使用场景              | 简单情况 | 复杂情况         | 简单情况    |
+| 是否立即执行          | 是       | 看参数（2）      | 是          |
+| 本质                  | class    | function         | function    |
+
+（1）依赖：指的是响应性依赖，也就是侦听 ref、reactive 这类具有响应性的对象。
+
+（2）watch：默认情况下，被侦听对象变化时才会执行，但是可以通过 options 参数设置为可以立即执行
+
+> computed的缓存原理：就是ComputedRefImpl上有私有成员`_value`，执行get方法时，会吧返回值存入`_value`，template直接从`_value`属性获取数据，在需要更新缓存的时候才会调用`getter`方法
 
 
 
