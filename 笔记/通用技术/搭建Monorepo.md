@@ -453,17 +453,3 @@ pnpm changest init
 所以我们要结合实际的业务需求来进行代码仓库模式的选择，比如开发内部工具库、组件库这种场景就非常适合使用`Monorepo`来进行代码管理；而多个项目应用之间的代码复用也有许多方案, 比如 利用webpack的[模块联邦](https://webpack.docschina.org/concepts/module-federation/)功能、抽离`npm`包进行引用、使用`git submodule`等功能。
 
 总之，每种方案都有利有弊，我们要做的就是不断去思考并调研新技术，选出最符合我们业务场景的方案。
-
-## **参考文章**
-
-[为什么越来越多的项目选择 Monorepo？](https://juejin.cn/post/7207743145999368229)
-
-[pnpm](https://pnpm.io/zh/motivation)
-
-[pnpm + workspace + changesets 构建你的 monorepo 工程](https://juejin.cn/post/7098609682519949325)
-
-[Monorepo 是什么，为什么大家都在用？](https://zhuanlan.zhihu.com/p/77577415)
-
-[使用 MonoRepo 管理你的前端项目](https://zhuanlan.zhihu.com/p/333021512)
-
-[Turborepo](https://turbo.build/repo)
