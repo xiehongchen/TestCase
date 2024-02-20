@@ -1,3 +1,12 @@
+/*
+ * @Author: xiehongchen 1754581057@qq.com
+ * @Date: 2023-11-17 11:08:53
+ * @LastEditors: xiehongchen 1754581057@qq.com
+ * @LastEditTime: 2024-02-20 14:21:12
+ * @FilePath: /TestCase/test.js
+ * @Description: 
+ * 认真学习每一天
+ */
 /**
  * 实现一个并发请求
  * 请求地址为一个数组，有一个最大并发数，每次发送请求数量不超过最大并发数，
