@@ -1,12 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>瀑布流效果</title>
+<style>
+  #columns {
+    column-count: 3;
+    column-gap: 20px;
+  }
+
+  .item {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+</style>
 </head>
 <body>
-  
+  <div id="columns">
+    <div class="item">Item 1</div>
+    <div class="item">Item 2</div>
+    <div class="item">Item 3</div>
+    <div class="item">Item 4</div>
+    <div class="item">Item 5</div>
+    <div class="item">Item 6</div>
+    <div class="item">Item 7</div>
+    <div class="item">Item 8</div>
+    <div class="item">Item 9</div>
+    <div class="item">Item 10</div>
+    <div class="item">Item 11</div>
+    <div class="item">Item 12</div>
+    <!-- Add more items as needed -->
+  </div>
+
+  <script>
+    window.onload = function() {
+      var columns = document.getElementById('columns');
+      var items = columns.getElementsByClassName('item');
+      var columnHeights = Array.from({ length: 3 }, () => 0);
+
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var minHeight = Math.min.apply(Math, columnHeights);
+        var minIndex = columnHeights.indexOf(minHeight);
+
+        item.style.position = 'absolute';
+        item.style.top = minHeight + 'px';
+        item.style.left = (minIndex * (item.offsetWidth + 20)) + 'px';
+
+        columnHeights[minIndex] += item.offsetHeight + 20;
+      }
+
+      var maxHeight = Math.max.apply(Math, columnHeights);
+      columns.style.height = maxHeight + 'px';
+    }
+  </script>
 </body>
 </html>

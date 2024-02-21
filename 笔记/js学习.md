@@ -660,18 +660,31 @@ console.log('obj', obj)
 
 
 
-# set、map、reduce
+# Set、Map、reduce
 
 ### Set
+
+> 可以使用`add()`方法向Set加入值
+>
+> 向Set加入值时，不会发生类型转换，所以5和"5"是不同值
+>
+> 但如果加入两次NaN，只会加入一个，所以在Set内部里，两个NaN是相等的
+>
+> 如果加入两个对象`set.add({})`，则是两个不相等的
 
 #### 去重
 
 使用 Set 可以轻松地进行数组去重操作，因为 Set 只能存储唯一的值。
 
+传入字符串也可以去重
+
 ```javascript
 const arr = [1, 2, 3, 1, 2, 4, 5];
 const uniqueArr = [...new Set(arr)];
+const str = 'abbbc'
+const uniqueStr = [...new Set(str)];
 console.log(uniqueArr); // [1, 2, 3, 4, 5]
+console.log(uniqueStr); // ['a','b','c']
 ```
 
 #### 数组转换
@@ -768,6 +781,7 @@ const obj = Object.fromEntries(map);
 ```js
 const map = new Map().set('key1', 'value1').set('key2', 'value2');
 const array = Array.from(map);
+const array = [...map]; // 这样也可以
 ```
 
 #### 记录数据的顺序
@@ -1639,7 +1653,7 @@ obj = null; // 现在，obj 可以被垃圾回收
 
 `WeakMap`是一种键值对的集合，类似于`Map`。不过，`WeakMap`与`Map`有几个重要的区别：
 
-- 在`WeakMap`中，只有对象可以作为键。换句话说，我们不能使用基本类型（如数字，字符串，布尔值等）作为`WeakMap`的键。
+- 在`WeakMap`中，只有对象和Symbol值可以作为键。换句话说，我们不能使用基本类型（如数字，字符串，布尔值等）作为`WeakMap`的键。
 - `WeakMap`的键是弱引用的。这意味着，如果一个对象只被`WeakMap`引用，那么这个对象可以被垃圾回收（GC）。当这个对象被垃圾回收后，它对应的键值对也会从`WeakMap`中自动移除。
 - `WeakMap`不可遍历，也就是说，我们不能使用像`for...of`这样的循环来遍历`WeakMap`。
 
@@ -1647,7 +1661,7 @@ obj = null; // 现在，obj 可以被垃圾回收
 
 `WeakSet`也是一种集合，类似于`Set`。`WeakSet`与`Set`的主要区别包括：
 
-- 在`WeakSet`中，只有对象可以作为值。也就是说，我们不能将基本类型（如数字，字符串，布尔值等）添加到`WeakSet`中。
+- 在`WeakSet`中，只有对象或者Symbol值可以作为值。也就是说，我们不能将基本类型（如数字，字符串，布尔值等）添加到`WeakSet`中。
 - `WeakSet`中的对象是弱引用的。如果一个对象只被`WeakSet`引用，那么这个对象可以被垃圾回收。当这个对象被垃圾回收后，它会自动从`WeakSet`中移除。
 - `WeakSet`不可遍历，也就是说，我们不能使用像`for...of`这样的循环来遍历`WeakSet`。
 
@@ -1761,6 +1775,58 @@ function processObject(obj) {
 与`WeakMap`一样，`WeakSet`中的对象也是弱引用的，所以`WeakSet`也有优秀的内存管理特性。如果一个对象只被`WeakSet`引用，那么这个对象可以被垃圾回收。这样就可以防止因为长时间持有对象引用导致的内存泄漏。
 
 例如，如果我们在`Set`中保存了一些对象的引用，即使这些对象在其他地方都已经不再使用，但是由于它们仍被`Set`引用，所以它们不能被垃圾回收，这就可能导致内存泄漏。然而，如果我们使用`WeakSet`来保存这些对象的引用，那么当这些对象在其他地方都不再使用时，它们就会被垃圾回收，从而防止了内存泄漏
+
+
+
+# 弱引用
+
+WeakSet 和 WeakMap 是基于弱引用的数据结构，[ES2021](https://github.com/tc39/proposal-weakrefs) 更进一步，提供了 WeakRef 对象，用于直接创建对象的弱引用。
+
+```javascript
+let target = {};
+let wr = new WeakRef(target);
+```
+
+上面示例中，`target`是原始对象，构造函数`WeakRef()`创建了一个基于`target`的新对象`wr`。这里，`wr`就是一个 WeakRef 的实例，属于对`target`的弱引用，垃圾回收机制不会计入这个引用，也就是说，`wr`的引用不会妨碍原始对象`target`被垃圾回收机制清除。
+
+WeakRef 实例对象有一个`deref()`方法，如果原始对象存在，该方法返回原始对象；如果原始对象已经被垃圾回收机制清除，该方法返回`undefined`。
+
+```javascript
+let target = {};
+let wr = new WeakRef(target);
+
+let obj = wr.deref();
+if (obj) { // target 未被垃圾回收机制清除
+  // ...
+}
+```
+
+上面示例中，`deref()`方法可以判断原始对象是否已被清除。
+
+弱引用对象的一大用处，就是作为缓存，未被清除时可以从缓存取值，一旦清除缓存就自动失效。
+
+```javascript
+function makeWeakCached(f) {
+  const cache = new Map();
+  return key => {
+    const ref = cache.get(key);
+    if (ref) {
+      const cached = ref.deref();
+      if (cached !== undefined) return cached;
+    }
+
+    const fresh = f(key);
+    cache.set(key, new WeakRef(fresh));
+    return fresh;
+  };
+}
+
+const getImageCached = makeWeakCached(getImage);
+```
+
+上面示例中，`makeWeakCached()`用于建立一个缓存，缓存里面保存对原始文件的弱引用。
+
+注意，标准规定，一旦使用`WeakRef()`创建了原始对象的弱引用，那么在本轮事件循环（event loop），原始对象肯定不会被清除，只会在后面的事件循环才会被清除。
 
 
 
@@ -2358,6 +2424,173 @@ let proxy = new Proxy(target, {
 ```
 
 Reflect的方法有许多优点。首先，它们总是返回一个期望的值，使得代码更易于理解和调试。其次，它们提供了一种正确处理JavaScript基本操作的方法。例如，使用`Reflect.set()`可以正确处理设置只读属性的情况。
+
+
+
+# Reflect
+
+`Reflect`是ES6中引入的一个新的内置对象，提供了一组静态方法，这些方法与一些操作符和语句的行为是一致的。`Reflect`对象的方法可以被用于代替一些传统的操作，比如属性的获取、设置、删除，函数的调用等，同时也提供了一些元编程的能力。
+
+下面是`Reflect`对象的一些常用方法：
+
+## 1. 属性操作方法：
+
+- `Reflect.get(target, propertyKey, receiver)`：获取对象的属性值。
+- `Reflect.set(target, propertyKey, value, receiver)`：设置对象的属性值。
+- `Reflect.has(target, propertyKey)`：检查对象是否具有特定属性。
+- `Reflect.deleteProperty(target, propertyKey)`：删除对象的属性。
+- `Reflect.getOwnPropertyDescriptor(target, propertyKey)`：获取对象的属性描述符。
+- `Reflect.defineProperty(target, propertyKey, attributes)`：定义对象的属性。
+- `Reflect.isExtensible(target)`：判断对象是否可扩展。
+- `Reflect.preventExtensions(target)`：阻止对象的扩展。
+- `Reflect.ownKeys(target)`：返回对象的所有自有属性的键名。
+
+下面我来举几个例子，展示如何使用Reflect对象的方法来完成属性操作和元编程任务。
+
+### 1. 使用 Reflect.get() 获取对象的属性值：
+
+```js
+js
+复制代码let person = {
+    name: 'John',
+    age: 30
+};
+
+console.log(Reflect.get(person, 'name')); // Output: John
+```
+
+### 2. 使用 Reflect.set() 设置对象的属性值：
+
+```js
+js
+复制代码let person = {
+    name: 'John',
+    age: 30
+};
+
+Reflect.set(person, 'age', 35);
+console.log(person.age); // Output: 35
+```
+
+### 3. 使用 Reflect.has() 检查对象是否具有特定属性：
+
+```js
+js
+复制代码let person = {
+    name: 'John',
+    age: 30
+};
+
+console.log(Reflect.has(person, 'name')); // Output: true
+console.log(Reflect.has(person, 'city')); // Output: false
+```
+
+### 4. 使用 Reflect.deleteProperty() 删除对象的属性：
+
+```js
+js
+复制代码let person = {
+    name: 'John',
+    age: 30
+};
+
+Reflect.deleteProperty(person, 'age');
+console.log(person); // Output: { name: 'John' }
+```
+
+### 5. 使用 Reflect.defineProperty() 定义对象的属性：
+
+```js
+js
+复制代码let person = {};
+
+Reflect.defineProperty(person, 'name', {
+    value: 'John',
+    writable: true,
+    configurable: true,
+    enumerable: true
+});
+
+console.log(person.name); // Output: John
+```
+
+### 6. 使用 Reflect.ownKeys() 返回对象的所有自有属性的键名：
+
+```js
+js
+复制代码let person = {
+    name: 'John',
+    age: 30
+};
+
+console.log(Reflect.ownKeys(person)); // Output: [ 'name', 'age' ]
+```
+
+## 2. 函数调用方法：
+
+- `Reflect.apply(target, thisArgument, argumentsList)`：调用函数，可以传递`this`值和参数列表。
+- `Reflect.construct(target, argumentsList, newTarget)`：相当于使用`new`关键字调用构造函数。
+
+## 3. 原型方法：
+
+- `Reflect.getPrototypeOf(target)`：获取对象的原型。
+- `Reflect.setPrototypeOf(target, prototype)`：设置对象的原型。
+
+## 4. 转换方法：
+
+- `Reflect.toPrimitive(target, hint)`：将对象转换为相应的原始值。
+- `Reflect.toString(target)`：将对象转换为字符串。
+- `Reflect.valueOf(target)`：返回对象的原始值。
+
+## 5. Proxy拦截方法：
+
+`Reflect`对象的方法可以被用于与`Proxy`对象配合，以进行更灵活的代理操作。
+
+通过使用`Reflect`，你可以更方便地调用内置的操作，它们具有一致的语法和行为，这使得代码更具可读性和一致性。而且，`Reflect`的方法在某些情况下会比直接操作对象更安全，因为它们会返回一个布尔值或者抛出异常来表明操作是否成功。
+
+## 总结
+
+Proxy 和 Reflect 是 ES6 中引入的两个重要的特性，它们都为 JavaScript 的元编程提供了强大的支持。
+
+### Proxy
+
+1. **基本概念**：
+   - Proxy 允许你创建一个代理对象，可以拦截并自定义 JavaScript 对象的基本操作。
+2. **用法**：
+   - 可以拦截目标对象的操作，比如属性查找、赋值、枚举等。
+   - Proxy 提供了一系列捕获器（handlers）来定义代理对象的行为，例如 `get`、`set`、`has`、`deleteProperty` 等。
+3. **优势**：
+   - 允许在对象操作层面进行拦截和定制，提供了更高级的控制和行为修改能力。
+   - 支持对对象的读取和设置等操作进行自定义处理，增强了代码的灵活性和可维护性。
+
+### Reflect
+
+1. **基本概念**：
+   - Reflect 是一个内置对象，提供了一组静态方法，这些方法与一些操作符和语句的行为是一致的。
+2. **用法**：
+   - 提供了一系列方法，用于替代传统的操作，比如属性的获取、设置、删除，函数的调用等。
+   - Reflect 方法与对应的操作符或语句的行为一致，例如 `Reflect.get()`、`Reflect.set()`、`Reflect.has()` 等。
+3. **优势**：
+   - 提供了更统一和一致的 API，使得操作更加可预测和可控。
+   - 支持一些元编程的能力，使得代码更加易于理解和维护。
+
+### 综合特性
+
+1. **配合使用**：
+   - Proxy 和 Reflect 可以结合使用，通过 Proxy 拦截器捕获对象的操作，然后通过 Reflect 方法进行相应的操作。
+2. **元编程能力**：
+   - Proxy 和 Reflect 为 JavaScript 提供了强大的元编程能力，使得开发者可以更灵活地操作和定制对象的行为。
+3. **ES6 增强**：
+   - 这两个特性是 ES6 的重要增强，为 JavaScript 的语言特性提供了更多的可能性和便利性。
+
+在开发中，Proxy 和 Reflect 可以帮助开发者实现更加复杂和灵活的代码逻辑，提升了代码的可读性和可维护性，是现代 JavaScript 开发中不可或缺的重要特性。
+
+
+
+作者：来颗奇趣蛋
+链接：https://juejin.cn/post/7333236033038647337
+来源：稀土掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 
 
