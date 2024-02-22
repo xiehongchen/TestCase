@@ -1,18 +1,12 @@
-function versionSort (arr) {
-    return arr.sort((a, b) => {
-      let i = 0
-      const arr1 = a.split('.')
-      const arr2 = b.split('.')
-      while (true) {
-        const s1 = arr1[i]
-        const s2 = arr2[i]
-        i++
-        if (s1 === undefined || s2 === undefined) {
-          return arr2.length - arr1.length
-        }
-        if (s1 === s2) continue
-        return s2 - s1
-      }
-    })
-  }
-  console.log(versionSort(['2.1.0.1', '0.402.1', '10.2.1', '5.1.2', '1.0.4.5']))
+/*
+ * @Author: xiehongchen 1754581057@qq.com
+ * @Date: 2023-11-17 11:08:53
+ * @LastEditors: xiehongchen 1754581057@qq.com
+ * @LastEditTime: 2024-02-22 14:26:50
+ * @FilePath: /TestCase/test.js
+ * @Description: 
+ * 认真学习每一天
+ */
+const arr = ["March", "Jan", 6, 2, "A", "a"];
+//在索引为2的位置截取一个，并在索引2的位置后添加8
+console.log(arr.splice(2, 1));
