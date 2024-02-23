@@ -84,3 +84,74 @@ concurrentPromises(promises, 2)
   .catch(error => {
       console.error('Error:', error);
   });
+
+
+  /*
+ * @Author: xiehongchen 1754581057@qq.com
+ * @Date: 2023-11-17 11:08:53
+ * @LastEditors: xiehongchen 1754581057@qq.com
+ * @LastEditTime: 2024-02-23 17:12:56
+ * @FilePath: /TestCase/js/控制并发.js
+ * @Description: 
+ * 认真学习每一天
+ */
+// 异步函数 a，b，c
+function a() {
+  return new Promise(resolve => {
+      setTimeout(() => {
+          console.log('Task a is done');
+          resolve();
+      }, 1000);
+  });
+}
+
+function b() {
+  return new Promise(resolve => {
+      setTimeout(() => {
+          console.log('Task b is done');
+          resolve();
+      }, 5000);
+  });
+}
+
+function c() {
+  return new Promise(resolve => {
+      setTimeout(() => {
+          console.log('Task c is done');
+          resolve();
+      }, 1000);
+  });
+}
+
+// 实现 pLimit 函数
+function pLimit(limit) {
+  let running = 0;
+  const queue = [];
+
+  function executeNext() {
+      if (running < limit && queue.length > 0) {
+          const task = queue.shift();
+          running++;
+          task().finally(() => {
+              running--;
+              executeNext();
+          });
+      }
+  }
+
+  return function (fn, ...args) {
+      return new Promise((resolve, reject) => {
+          const task = () => fn(...args).then(resolve, reject);
+          queue.push(task);
+          executeNext();
+      });
+  };
+}
+
+// 使用 pLimit 函数
+let countLimit = pLimit(2);
+countLimit(a); // 立即执行
+countLimit(b); // 立即执行
+countLimit(c); // 前两个函数执行完再执行
+countLimit(c); 
+countLimit(c); 

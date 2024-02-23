@@ -1,12 +1,36 @@
-/*
- * @Author: xiehongchen 1754581057@qq.com
- * @Date: 2023-11-17 11:08:53
- * @LastEditors: xiehongchen 1754581057@qq.com
- * @LastEditTime: 2024-02-22 14:26:50
- * @FilePath: /TestCase/test.js
- * @Description: 
- * 认真学习每一天
- */
-const arr = ["March", "Jan", 6, 2, "A", "a"];
-//在索引为2的位置截取一个，并在索引2的位置后添加8
-console.log(arr.splice(2, 1));
+class Subject {
+  constructor() {
+    this.observers = [];
+  }
+
+  addObserver(observer) {
+    this.observers.push(observer);
+  }
+
+  removeObserver(observer) {
+    const index = this.observers.indexOf(observer);
+    if (index !== -1) {
+      this.observers.splice(index, 1);
+    }
+  }
+
+  notify(data) {
+    this.observers.forEach(observer => observer.update(data));
+  }
+}
+
+class Observer {
+  update(data) {
+    console.log(`Received data: ${data}`);
+  }
+}
+
+// 使用示例
+const subject = new Subject();
+const observer1 = new Observer();
+const observer2 = new Observer();
+
+subject.addObserver(observer1);
+subject.addObserver(observer2);
+
+subject.notify("Hello World!");
