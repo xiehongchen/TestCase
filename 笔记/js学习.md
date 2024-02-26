@@ -1,3 +1,7 @@
+---
+
+---
+
 # js执行过程
 
 JavaScript代码的执行过程可以分为三个阶段：解析（Parsing）、编译（Compilation）和执行（Execution）
@@ -1121,7 +1125,7 @@ function myReduce(arr, callback, initialValue) {
 
 - 为了避免相互影响，为了减少连环崩溃的几率，当浏览器启动后，它会自动启动多个进程
 
-![img](https://ap3pibqbmd.feishu.cn/space/api/box/stream/download/asynccode/?code=YjcwMjliMzE2YzlmYTU2OWNkNWFhZmZkYzRiNzM0NmRfMW52SDBuQlNQcXl6UENFUXdBYTlLMVlOQ0praFFtRzBfVG9rZW46Ym94Y25keG9FWm1seVBDRVp4UG9abFpNdThSXzE3MDcyMDE2NzU6MTcwNzIwNTI3NV9WNA)
+![img](/Users/mac/Desktop/test/TestCase/images/js-llq.PNG)
 
 > 可以在浏览器的任务管理器中查看当前的所有进程
 
@@ -1168,7 +1172,7 @@ function myReduce(arr, callback, initialValue) {
 
 - dnag
 
-![img](https://ap3pibqbmd.feishu.cn/space/api/box/stream/download/asynccode/?code=NGU4OGU1M2E4ZGNhNGRhZWQxNTcyNjI0YzU0YzllOTBfNkhaY1dKNGliSjhGS0QybkVVeXVjQUlBR2xhaVF1NWlfVG9rZW46Ym94Y25OQ1BwRGFvc08ybXNqVkg1U1hXOHZmXzE3MDcyMDE2NzU6MTcwNzIwNTI3NV9WNA)
+![](/Users/mac/Desktop/test/TestCase/images/js-paidui.png)
 
 1. 在最开始的时候，渲染主线程会进入一个无限循环（for（; ;））
 2. 每一次循环会检查消息队列中是否有任务存在，如果有，就取出第一个任务执行，执行完一个后进入下一次循环，如果没有，则进入休眠状态
@@ -1188,13 +1192,13 @@ function myReduce(arr, callback, initialValue) {
 
 如果让渲染主线程等待这些任务的时机到达，就会导致主线程长期处于【阻塞】的状态，从而导致浏览器【卡死】
 
-![img](https://ap3pibqbmd.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWNhZjQ4Zjc5MmZmZDk2Yjg3MmUxMmY0MDI1MTZjNjlfTFZ1Tm8zY3k0TWpJaEZlWVY3U3d6ZFV6UWg1dWN4Sm9fVG9rZW46Ym94Y25mTklHTHp6NTZlZ1VJTGFLbUFaUVZiXzE3MDcyMDE2NzU6MTcwNzIwNTI3NV9WNA)
+![img](blob:https://ap3pibqbmd.feishu.cn/37ca1818-f408-4f6e-95cc-0fbc93e2d714)
 
 **渲染主线程承担着极其重要的工作，无论如何都不能阻塞**
 
 因此，浏览器选择**异步**来解决这个问题
 
-![img](https://ap3pibqbmd.feishu.cn/space/api/box/stream/download/asynccode/?code=NTQ4YmFkM2YyNzM0NDk5YTA1YjVmZDAyY2NhODljNDhfNlE3SnYzYWtCd1pEYVBmc3BZeExjbENNcXNUTnpXMmxfVG9rZW46Ym94Y25PODdaM2VmenBpWlRnd3BIM3RkUkdjXzE3MDcyMDE2NzU6MTcwNzIwNTI3NV9WNA)
+![img](/Users/mac/Desktop/test/TestCase/images/js-yibu.png)
 
  使用异步的方式，渲染主线程永不阻塞
 
