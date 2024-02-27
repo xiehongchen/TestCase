@@ -53,3 +53,22 @@
 
 
 # vue的响应式原理
+
+
+
+# pinia和vuex
+
+## pinia
+
+- pinia专门为vue3设计开发，支持Componention API，支持TypeScript，支持类型推断，是一个轻量级的状态管理解决方案
+- 只有state、getter、actions，可以直接使用，更加的的API，更少的规范
+- 在不重新加载页面的情况下可以修改store，支持热模块更换
+
+
+
+## vuex
+
+- vuex为vue2设计开发的
+- 有state、getter、mutation、action四个，只有mutation才能变更状态，action是提交mutation。action包含异步操作
+- 还有一个module，模块，将一些一起的都集合到一个模块，有点像vue3的Componention API
+
