@@ -1,7 +1,3 @@
----
-
----
-
 # js执行过程
 
 JavaScript代码的执行过程可以分为三个阶段：解析（Parsing）、编译（Compilation）和执行（Execution）

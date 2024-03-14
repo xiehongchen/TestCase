@@ -110,3 +110,57 @@
 - **误销毁同名事件其它监听器**
    比如多个组件都监听了同一事件'add'。其中某个组件销毁了'add'事件下的所有监听器`this.$EventBus.$off('add')`，就会影响其他的组件。
 - **其它问题** 例如调试困难，耦合性高等等
+
+
+
+# v-if和v-for
+
+vue2中v-for优先
+
+vue3中v-if优先
+
+# 组件渲染和更新的过程
+
+初次渲染的过程
+
+- 解析模板为render函数
+- 触发响应式，监听data属性getter setter
+- 执行render函数，生成vnode，patch(elem,vnode)
+- 执行render会触发getter
+
+更新过程
+
+- 修改data，触发setter
+- 重新执行render函数，生成newVnode
+- patch(vnode,newVnode),diff算法会算差异
+
+![MVVM](/Users/mac/Desktop/test/TestCase/images/MVVM.jpeg)
+
+![MVVM代码](/Users/mac/Desktop/test/TestCase/images/MVVM代码.jpeg)![]()
+
+# 双向数据绑定v-model的实现原理
+
+- input元素的value=this.name
+- 绑定input事件 this.name = $event.target.value
+- data 更新触发 re-render
+
+3个步骤，实现数据的双向绑定：
+
+1.实现一个监听器Observer，用来劫持并监听所有属性，如果有变动的，就通知订阅者。
+
+2.实现一个订阅者Watcher，可以收到属性的变化通知并执行相应的函数，从而更新视图。
+
+3.实现一个解析器Compile，可以扫描和解析每个节点的相关指令，并根据初始化模板数据以及初始化相应的订阅器。
+
+![下载](/Users/mac/Desktop/test/TestCase/images/下载.jpeg)
+
+**vue是采用数据劫持结合发布者-订阅者模式的方式**，通过**Object.defineProperty()**来劫持各个属性的setter，getter，在数据变动时发布消息给订阅者，触发响应的监听回调。
+
+v-model原理其实就是给input事件绑定oninput事件 就会立刻调用底层对象对应的setter方法 改变data里的属性的值 从而实现双向数据绑定
+
+**vue单项数据绑定原理**
+
+单项绑定过程：变量变了，由set发通知给watcher，watcher告知虚拟DOM树，叫它该比较了，我这有值变了，于是生成新的dom树进行一个比较，然后逐级分类比较，比较出哪个元素发生变化就把这个元素更新到页面，这就是单项数据绑定原理。
+
+![双向绑定原理](/Users/mac/Desktop/test/TestCase/images/双向绑定原理.jpeg)
+
