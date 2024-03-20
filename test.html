@@ -1,79 +1,25 @@
-<!--
- * @Author: xiehongchen 1754581057@qq.com
- * @Date: 2024-02-20 14:21:00
- * @LastEditors: xiehongchen 1754581057@qq.com
- * @LastEditTime: 2024-02-28 18:32:09
- * @FilePath: /TestCase/test.html
- * @Description: 
- * 认真学习每一天
--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Face Recognition Demo</title>
-    <!-- 引入 face-api.js 库 -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection/dist/face-landmarks-detection.esm.js"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <body>
-    <!-- 用于显示视频流的 video 元素 -->
-    <video id="video" width="640" height="480" autoplay></video>
-    <canvas id="output" width="640" height="480"></canvas>
-
-    <script>
-        // 在页面加载完成后执行
-        window.onload = async function() {
-            // 获取 video 和 canvas 元素
-            const video = document.getElementById('video');
-            const output = document.getElementById('output');
-            const context = output.getContext('2d');
-
-            // 获取摄像头权限，获取到后开始处理视频流
-            const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
-            video.srcObject = stream;
-
-            // 加载模型
-            const model = await faceLandmarksDetection.load(
-                faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
-            );
-
-            // 每帧处理视频流
-            video.addEventListener('play', () => {
-                const loop = async () => {
-                    // 如果视频已停止，结束处理
-                    if (video.paused || video.ended) {
-                        return;
-                    }
-
-                    // 检测人脸
-                    const predictions = await model.estimateFaces({ input: video });
-                    
-                    // 清除画布
-                    context.clearRect(0, 0, output.width, output.height);
-
-                    // 绘制人脸框
-                    predictions.forEach(prediction => {
-                        const start = prediction.annotations.nose[0];
-                        context.beginPath();
-                        context.moveTo(start[0], start[1]);
-                        prediction.annotations.nose.forEach(point => {
-                            context.lineTo(point[0], point[1]);
-                        });
-                        context.lineTo(start[0], start[1]);
-                        context.lineWidth = 3;
-                        context.strokeStyle = 'red';
-                        context.stroke();
-                    });
-
-                    // 递归调用处理下一帧
-                    requestAnimationFrame(loop);
-                };
-                loop();
-            });
-        };
-    </script>
+<script>
+  console.log('第一个')
+  Promise.resolve().then(() => console.log("第一个-promise"));
+  setTimeout(() => {
+    console.log('第一个-setTimeout')
+  })
+</script>
+<script>
+  console.log('第二个')
+  Promise.resolve().then(() => console.log("第二个-promise"));
+  setTimeout(() => {
+    console.log('第二个-setTimeout')
+  })
+</script>
 </body>
 </html>
