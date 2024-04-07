@@ -4,12 +4,19 @@ const readline = async () => (await iter.next()).value;
  
 void async function () {
     // Write your code here
-    let tokens = [];
+    let arr = [];
     while ((line = await readline())) {
-        tokens.push(line);
+       arr.push(line) 
     }
-    let first = tokens[0].split("");
-    let second = tokens[1];
-    let isTrue = first.every((item) => second.includes(item));
-    console.log(isTrue);
+    console.log(arr)
+    // let p = arr[1]
+    // let n = arr[2]
+    // for (let i = 0; i < p.length; i++) {
+    //     if (map[p[i]]) map[p[i]] += n[i]
+    //     else map[p[i]] = n[i]
+    // }
+    // let entries = Object.entries(map)
+    // entries.sort((a, b) => b - a)
+    // let obj = Object.fromEntries(entries)
+    // console.log(obj)
 }()
