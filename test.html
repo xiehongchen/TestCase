@@ -1,134 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
-    #fileInput::file-selector-button {
-    cursor: pointer;
-    border: 2px solid #555555;
-    color: #555555;
-    padding: 8px;
-    border-radius: 4px;
-    background-color: #ffffff;
-}
-#fileInput::file-selector-button:hover {
-    background-color: #e9e9e9;
-}
-#fileInput::-webkit-file-upload-button {
-    border: 2px solid #555555;
-    color: #555555;
-    padding: 8px;
-    border-radius: 4px;
-    background-color: #ffffff;
-}
-#fileInput::-webkit-file-upload-button:hover {
-    background-color: #e9e9e9;
-}
-
-  </style>
-</head>
-<body>
-  <h1>JavaScript提取PDF图片</h1>
-  <div style="margin-bottom: 20px;">
-  <input type="file" id="fileInput" name="avatar" title ="选择 pdf 文件" style="width: 100%"/>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.111/pdf.js"></script>
-<script>
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.10.111/build/pdf.worker.js';
-
-async function loadPDFFile(loadingTask) {
-  const pdf = await loadingTask.promise;
-  const numPages = pdf.numPages;
-  for (let curPage = 1; curPage <= numPages; curPage++) {
-    console.log('loadingServerFile curPage: ', curPage);
-    const page = await pdf.getPage(curPage);
-
-    const scale = 1.5;
-    const viewport = page.getViewport({ scale });
-    // Support HiDPI-screens.
-    const outputScale = window.devicePixelRatio || 1;
-
-    const canvas = new OffscreenCanvas(200, 200);
-    const context = canvas.getContext("2d");
-
-    const transform = outputScale !== 1 
-      ? [outputScale, 0, 0, outputScale, 0, 0] 
-      : null;
-
-    const renderContext = {
-      canvasContext: context,
-      transform,
-      viewport,
-    };
-    const renderTask = page.render(renderContext);
-    await renderTask.promise;
-
-    const ops = await page.getOperatorList();
-
-    // https://stackoverflow.com/a/39855420 Extract Images
-    const imageNames = ops.fnArray.reduce((acc, curr, i) => {
-      if ([pdfjsLib.OPS.paintImageXObject, pdfjsLib.OPS.paintJpegXObject].includes(curr)) {
-        acc.push(ops.argsArray[i][0]);
-      }
-      return acc;
-    }, []);
-    for (const imageName of imageNames) {
-      console.log('imageName: ', imageName);
-      page.objs.get(imageName, (image) => {
-        // console.log('image: ', image);
-        (async function() {
-          // https://stackoverflow.com/questions/52959839/convert-imagebitmap-to-blob/52959897#52959897
-          const bmp = image.bitmap;
-          // create a canvas
-          // the difference of ImageData and ImageBitmap https://stackoverflow.com/a/60033582
-          // const canvas = document.createElement('canvas');
-          // resize it to the size of our ImageBitmap
-          // canvas.width = bmp.width;
-          // canvas.height = bmp.height;
-          // OffscreenCanvas
-          const resizeScale = 1/4;
-          const width = bmp.width * resizeScale;
-          const height = bmp.height * resizeScale;
-          const canvas = new OffscreenCanvas(width, height);
-          // get a bitmaprenderer context
-          // bitmaprenderer 和 
-          const ctx = canvas.getContext('bitmaprenderer');
-
-          ctx.transferFromImageBitmap(bmp);
-          // get it back as a Blob
-          const blob = await canvas.convertToBlob();
-
-          const img = document.body.appendChild(new Image());
-          img.width = width;
-          img.height = height;
-          img.src = URL.createObjectURL(blob);
-        })();      
-      });
+save() {
+    if (this.getVideoUrl) {
+        uni.showLoading({
+            title: '正在下载，请稍后...',
+            mask: false
+        });
+        wx.getSetting({
+            withSubscriptions: true,
+            success: res => {
+                console.log('权限集合', res)
+                // 判断是否有相册的写入权限
+                if (res.authSetting['scope.writePhotosAlbum']) {
+                    // 写入文件
+                    uni.saveVideoToPhotosAlbum({
+                        filePath: this.videoUrl,
+                        success: (res) => {
+                            uni.hideLoading()
+                            uni.showToast({
+                                title: '保存成功',
+                                icon: 'success',
+                            });
+                            console.log('保存视频成功', res)
+                        },
+                        fail: (error) => {
+                            uni.hideLoading()
+                            uni.showToast({
+                                title: '保存失败',
+                                icon: 'none',
+                            });
+                            console.error('保存视频失败：', error);
+                        },
+                    });
+                } else {
+                    console.log('没有权限')
+                    // 没有权限，调用开启权限的方法，这里省略。
+                    uni.hideLoading()
+                    uni.authorize({
+                        scope: 'scope.writePhotosAlbum',
+                        success: (res) => {
+                            console.log('保存到相册权限成功', res)
+                        },
+                        fail: (res) => {
+                            console.log('保存到相册权限失败', res)
+                        }
+                    })
+                }
+            }
+        })
     }
-  }
-}
-
-const fileInput = document.getElementById('fileInput');
-fileInput.addEventListener(
-  "change",
-  () => {
-    const file = fileInput.files[0];
-    console.log('fileInput file: ', file);
-    var fileReader = new FileReader();  
-    fileReader.onload = function() {
-          var typedarray = new Uint8Array(this.result);
-          const loadingTask = pdfjsLib.getDocument(typedarray);
-          loadPDFFile(loadingTask);
-    };
-
-    fileReader.readAsArrayBuffer(file);
-  },
-  false
-);
-
-</script>
-</body>
-</html>
+},
