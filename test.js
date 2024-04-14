@@ -1,3 +1,14 @@
+const rl = require("readline").createInterface({ input: process.stdin });
+var iter = rl[Symbol.asyncIterator]();
+const readline = async () => (await iter.next()).value;
+
+void async function () {
+    // Write your code here
+    while(line = await readline()){
+      const arr = line.split('')
+      console.log(arr.reverse().join(''))
+    }
+}()
 function executePromisesSequentially(promiseFuncs) {
   let resultPromise = Promise.resolve(); // 初始一个resolved状态的Promise作为起点
 

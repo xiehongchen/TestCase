@@ -1,9 +1,10 @@
-var a =10
-function fun1(){
- console.log(a)
+var name = 'jack'
+
+function show () {
+  console.log(name)
+  if(0) {
+    var name = 'tom'
+  }
 }
-function fun2(){
- var a = 20
- fun1()
-}
-fun2()
+
+show()
