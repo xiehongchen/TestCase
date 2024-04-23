@@ -1,9 +1,12 @@
-var a =10
-function fun1(){
- console.log(a)
+{
+  key: 'fileSuffix';
+  value: 'text'
 }
-function fun2(){
- var a = 20
- fun1()
+{
+  key: 'logo';
+  value: 'https://yly-1252838868.file.myqcloud.com/kd-dev/UMUQ3OLAAUYB19D3ZEWQXCDM3/1253708VPZE2Q1R2G4F8DMVY5N/2404/10/1VLEYYO9ECT1E13PSQGXHDMK91.png'
 }
-fun2()
+{
+  key: 'title';
+  value: '文案提取下载助手'
+}
