@@ -1,29 +1,11 @@
-function executePromisesSequentially(promiseFuncs) {
-  let resultPromise = Promise.resolve(); // 初始一个resolved状态的Promise作为起点
-
-  // 遍历传入的promise数组
-  for (const promiseFunc of promiseFuncs) {
-    resultPromise = resultPromise.then(promiseFunc); // 将当前函数添加到链式调用中
-  }
-
-  return resultPromise; // 返回最终的Promise，支持链式调用
+// 十进制转二进制
+function toBinary(n) {
+  return n.toString(2)
+}
+// 二进制转十进制
+function toDecimal(n) {
+  return parseInt(n, 2)
 }
 
-// 示例用法
-const promises = [
-  () => new Promise(resolve => setTimeout(() => resolve('First'), 1000)),
-  () => new Promise(resolve => setTimeout(() => resolve('Second'), 500)),
-  () => new Promise(resolve => setTimeout(() => resolve('Third'), 200))
-];
-
-executePromisesSequentially(promises)
-  .then(results => {
-    console.log('Final result:', results); // 输出最终结果
-    return 'Chain completed'; // 返回值将传递给下一个.then()中
-  })
-  .then(finalMessage => {
-    console.log(finalMessage); // 输出链式调用完成信息
-  })
-  .catch(error => {
-    console.error('Error:', error); // 捕获链中任何地方出现的错误
-  });
+console.log(toBinary(100)) // 1100100
+console.log(toDecimal(10001001)) // 137
