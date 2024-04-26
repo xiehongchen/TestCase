@@ -422,20 +422,6 @@ export default App
 }
 ```
 
-## 阶段小练习
-
-![img](https://cdn.nlark.com/yuque/0/2022/png/274425/1654489923710-91b3abce-8f29-4550-9a3d-ff11f70efa55.png)
-
-
-
-练习说明
-
-1.  拉取准备好的项目模块到本地 ，安装依赖，run起来项目
-   https://gitee.com/react-course-series/react-jsx-demo 
-2.  按照图示，完成 `评论数据渲染`  `tab内容渲染`  `评论列表点赞和点踩`  三个视图渲染 
-
-
-
 # React组件基础
 
 ## 组件概念
@@ -443,10 +429,6 @@ export default App
 ![img](https://cdn.nlark.com/yuque/0/2022/png/274425/1654489956815-0348d9cc-a001-4d76-a832-1bccc2f1fde4.png)
 
 ## 函数组件
-
-`目标任务:`  能够独立使用函数完成react组件的创建和渲染
-
-
 
 **概念**
 
@@ -724,9 +706,9 @@ class Counter extends React.Component {
    2. 更新UI
 
 -  思想
-  	数据驱动视图，也就是只要修改数据状态，那么页面就会自动刷新，无需手动操作dom 
+    	数据驱动视图，也就是只要修改数据状态，那么页面就会自动刷新，无需手动操作dom 
 -  注意事项
-  	**不要直接修改state中的值，必须通过setState方法进行修改** 
+    	**不要直接修改state中的值，必须通过setState方法进行修改** 
 
 
 
@@ -923,41 +905,12 @@ function App () {
     </div>
   )
 }
-export default App
+export default App 
 ```
-
-
-
-## 阶段小练习
-
-![img](https://cdn.nlark.com/yuque/0/2022/png/274425/1654490378228-adea9aef-0b71-4bf2-97f7-f377e1419ef3.png)
-
-
-
-**练习说明**
-
-1.  拉取项目模板到本地，安装依赖，run起来项目
-   https://gitee.com/react-course-series/react-component-demo 
-2.  完成tab点击切换激活状态交互 
-3.  完成发表评论功能
-   注意：生成独立无二的id 可以使用  uuid 包  `yarn add uuid` 
-
-```javascript
-import { v4 as uuid } from 'uuid'
-uuid() // 得到一个独一无二的id
-```
-
- 
-
-1.  完成删除评论功能 
 
 # React组件通信
 
 ## 组件通信的意义
-
-`目标任务:`  了解为什么需要组件通信
-
-
 
 组件是独立且封闭的单元，默认情况下组件**只能使用自己的数据（state）**
 
@@ -1086,10 +1039,6 @@ class App extends React.Component {
 
 
 ## 子传父实现
-
-`目标任务:`  实现父子通信中的子传父
-
-
 
 **口诀：** 父组件给子组件传递回调函数，子组件调用
 
@@ -1325,92 +1274,9 @@ class App extends React.Component {
 export default App
 ```
 
-
-
-## 阶段小练习
-
-要求：App为父组件用来提供列表数据 ，ListItem为子组件用来渲染列表数据
-
-
-
-![img](https://cdn.nlark.com/yuque/0/2022/png/274425/1654490603983-9e535a08-84ca-4a16-850b-570586801ea3.png)
-
-
-
-```javascript
-// 列表数据
-[
-  { id: 1, name: '超级好吃的棒棒糖', price: 18.8, info: '开业大酬宾，全场8折' },
-  { id: 2, name: '超级好吃的大鸡腿', price: 34.2, info: '开业大酬宾，全场8折' },
-  { id: 3, name: '超级无敌的冰激凌', price: 14.2, info: '开业大酬宾，全场8折' }
-]
-```
-
-
-
-完整代码
-
-```jsx
-import React from 'react'
-
-// 子组件
-function ListItem(props) {
-  const { name, price, info, id, delHandler } = props
-  return (
-    <div>
-      <h3>{name}</h3>
-      <p>{price}</p>
-      <p>{info}</p>
-      <button onClick={() => delHandler(id)}>删除</button>
-    </div>
-  )
-}
-
-// 父组件
-class App extends React.Component {
-  state = {
-    list: [
-      { id: 1, name: '超级好吃的棒棒糖', price: 18.8, info: '开业大酬宾，全场8折' },
-      { id: 2, name: '超级好吃的大鸡腿', price: 34.2, info: '开业大酬宾，全场8折' },
-      { id: 3, name: '超级无敌的冰激凌', price: 14.2, info: '开业大酬宾，全场8折' }
-    ]
-  }
-
-  delHandler = (id) => {
-    this.setState({
-      list: this.state.list.filter(item => item.id !== id)
-    })
-  }
-
-  render() {
-    return (
-      <>
-        {
-          this.state.list.map(item =>
-            <ListItem
-              key={item.id}
-              {...item}
-              delHandler={this.delHandler} 
-            />
-          )
-        }
-      </>
-    )
-  }
-}
-
-export default App
-```
-
-
-
 # React组件进阶
 
 ## children属性
-
-`目标任务:`  掌握props中children属性的用法
-
-
 
 **children属性是什么**
 
@@ -1596,75 +1462,9 @@ http://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
 | -------------------- | ------------------------ | ---------------------------------- |
 | componentWillUnmount | 组件卸载（从页面中消失） | 执行清理工作（比如：清理定时器等） |
 
-## 阶段小练习 - todoMVC
-
-案例仓库地址：https://gitee.com/react-course-series/react-todo-mvc
-
-1- 克隆项目到本地 
-
-```bash
-$ git clone  https://gitee.com/react-course-series/react-todo-mvc.git
-```
-
- 
-
-2- 安装必要依赖 
-
-```bash
-$ yarn
-```
-
-
-
-3- 开启mock接口服务，**保持窗口不关闭**  ！！！！！ 
-
-```bash
-# 启动mock服务
-$ yarn mock-serve
-```
-
- 
-
-**4- 另起一个bash窗口**开启前端服务 
-
-```bash
-$ yarn start
-```
-
- 
-
-5- 切换到todo-test分支 
-
-```bash
-$ git checkout todo-test
-```
-
- 
-
-**接口文档**  
-
-| 接口作用 | 接口地址                                                     | 接口方法 | 接口参数               |
-| -------- | ------------------------------------------------------------ | -------- | ---------------------- |
-| 获取列表 | http://localhost:3001/data                                   | GET      | 无                     |
-| 删除     | http://localhost:3001/data/:id                               | DELETE   | id                     |
-| 搜索     | [http://localhost:3001/data/?name=keyword](http://localhost:3001/data/?q=keyword) | GET      | name（以name字段搜索） |
-
-**实现功能**
-
-| 功能         | 核心思路                             |
-| ------------ | ------------------------------------ |
-| 表格数据渲染 | 组件使用                             |
-| 删除功能     | 获取当前id  调用接口                 |
-| 搜索功能     | 用的依旧是列表接口，多传一个name参数 |
-| 清除搜索功能 | 清空搜索参数  重新获取列表           |
-
-
-
 # Hooks基础
 
 ## Hooks概念理解
-
-`本节任务:` 能够理解hooks的概念及解决的问题
 
 ### 1. 什么是hooks
 
@@ -2012,59 +1812,6 @@ const App = () => {
 export default App
 ```
 
-
-
-## 阶段小练习 - 自定义hook
-
-**需求描述**：自定义一个hook函数，实现获取滚动距离Y
-
-```
-const [y] = useWindowScroll()
-import { useState, useEffect } from "react"
-
-export function useWindowScroll () {
-  const [y, setY] = useState(0)
-  useEffect(()=>{
-     const scrollHandler = () => {
-        const h = document.documentElement.scrollTop
-        setY(h)
-     })
-     window.addEventListener('scroll', scrollHandler)
-     return () => window.removeEventListener('scroll', scrollHandler)
-  })
- 
-  return [y]
-}
-```
-
-
-
-**需求描述：** 自定义hook函数，可以自动同步到本地LocalStorage
-
-```
-const [message, setMessage] = useLocalStorage(key，defaultValue)
-```
-
-1. message可以通过自定义传入默认初始值
-2. 每次修改message数据的时候 都会自动往本地同步一份
-
-
-
-```javascript
-import { useEffect, useState } from 'react'
-
-export function useLocalStorage (key, defaultValue) {
-  const [message, setMessage] = useState(defaultValue)
-  // 每次只要message变化 就会自动同步到本地ls
-  useEffect(() => {
-    window.localStorage.setItem(key, message)
-  }, [message, key])
-  return [message, setMessage]
-}
-```
-
-
-
 # Hooks进阶
 
 ## useState - 回调函数的参数
@@ -2298,79 +2045,3 @@ export default App
 ```
 
 
-
-## 阶段小练习-todoMvc-hook版
-
-案例仓库地址：https://gitee.com/react-course-series/react-tomvc-hook
-
-
-
-1.  克隆项目到本地 
-
-```bash
-$ git clone  https://gitee.com/react-course-series/react-tomvc-hook.git
-```
-
- 
-
-1.  安装必要依赖 
-
-```bash
-$ yarn
-```
-
- 
-
-1.  开启mock接口服务，**保持窗口不关闭**  ！！！！！ 
-
-```bash
-# 启动mock服务
-$ yarn mock-serve
-```
-
- 
-
-1.  **另起一个bash窗口**开启前端服务 
-
-```bash
-$ yarn start
-```
-
- 
-
-1.  浏览器输入 localhost:3000演示效果 
-
-
-
-**项目开发步骤：**
-
-
-
-1.  切换到todo-test分支 
-
-```bash
-$ git checkout todo-test
-```
-
- 
-
-1.  打开 app.js
-   已有基础样板代码，在这个基础上编写业务逻辑即可 
-2.  接口文档  
-
-| 接口作用 | 接口地址                                                     | 接口方法 | 接口参数               |
-| -------- | ------------------------------------------------------------ | -------- | ---------------------- |
-| 获取列表 | http://localhost:3001/data                                   | GET      | 无                     |
-| 删除     | http://localhost:3001/data/:id                               | DELETE   | id                     |
-| 搜索     | [http://localhost:3001/data/?name=keyword](http://localhost:3001/data/?q=keyword) | GET      | name（以name字段搜索） |
-
-
-
-**实现功能**
-
-| 功能         | 核心思路                             |
-| ------------ | ------------------------------------ |
-| 表格数据渲染 | elementPlus el-table组件使用         |
-| 删除功能     | 获取当前id  调用接口                 |
-| 搜索功能     | 用的依旧是列表接口，多传一个name参数 |
-| 清除搜索功能 | 清空搜索参数  重新获取列表           |
